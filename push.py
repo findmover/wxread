@@ -4,7 +4,7 @@ import requests
 def push(content):
     url = "https://www.pushplus.plus/send"
     params = {
-        "token": "a3d80d84ff434ee79b5db33fc45b6d1d",
+        "token": "官网上去复制token",
         "content": content
     }
     headers = {
