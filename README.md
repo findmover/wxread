@@ -8,8 +8,8 @@
 
 1. 能进行刷阅读时长，且时长默认计入排行榜、挑战赛等。（指定200分钟）
 2. 可部署服务器每天定时运行脚本并推送到微信。
-3. 一次抓包，长时间使用。对于Cookie更新问题给出了自动获取Cookie更新值。
-4. 比较市面上的ADB调试器、自动阅读器，本脚本实现了轻量化编写，部署服务器即可运行，无需更多条件。
+3. 一次抓包，长时间使用。对于Cookie更新问题给出了自动获取Cookie更新值的解决方案。
+4. 比较市面上的ADB调试器、自动阅读器，本脚本实现了轻量化编写，部署服务器即可运行，无需更多环境条件。
 5. 脚本JS逆向分析各接口请求，分析各字段的拼接方式，并对字段进行加密、计算处理使得服务器能够成功响应（`{'succ': 1, 'synckey': 2060028311}`，表示数据字段正常）。
 
 ## 操作步骤
@@ -23,7 +23,7 @@ json复制代码{
 }
 ```
 
-右键复制为Bash格式，然后在 [Convert curl commands to Python (curlconverter.com)](https://curlconverter.com/python/) 转化为Python脚本，只复制前面的Header与Cookie字段替换到`main.py`即可。对于`renew`（`https://weread.qq.com/web/login/renewal`）自动更新Cookie的脚本，可以沿用`main.py`中的大部分字段，或者自己抓取，需要一段时间（大于一小时）。
+右键复制为Bash格式，然后在 [Convert curl commands to Python (curlconverter.com)](https://curlconverter.com/python/) 转化为Python脚本，只复制前面的Header与Cookie字段替换到`main.py`即可。对于`renew`（`https://weread.qq.com/web/login/renewal`）自动更新Cookie的接口，可以沿用`main.py`中的大部分字段，或者自己抓取，需要一段时间才能抓到更新cookie的值（大于一小时）。
 
 2、服务器运行，在你的服务器上有Python运行环境即可，使用`cron`定义自动运行指定即可。（如：
 
@@ -35,7 +35,7 @@ bash
 0 2 * * * /www/server/pyporject_evn/wxread_venv/bin/python3 /root/wxread/main.py >> /root/wxread/logs/$(date +\%y-\%m.\%d)_sout.log 2>&1
 ```
 
-可供参考）。
+意思为：【在每天两点时刻使用python所在位置编译器运行某个路径下的main.py脚本，同时将输出按每天的日期格式输出到对应日志中】可供参考）。
 
 3、Pushplus推送，更改你的Token即可。
 ## 截图展示
