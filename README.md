@@ -68,7 +68,7 @@ bash
 
 ### 字段解释
 
-- `appId`: `"wb182564874663h152492176"` ✔
+- `appId`: `"wbxxxxxxxxxxxxxxxxxxxxxxxx"` ✔
   - 应用的唯一标识符。
 
 - `b`: `"ce032b305a9bc1ce0b0dd2a"` ✔
@@ -104,10 +104,10 @@ bash
 - `ct`: `1727580815` ✔
   - 时间戳，表示请求发送的具体时间（秒级）。
 
-- `ps`: `"48d32f007a4c133dg011052"` ✔
+- `ps`: `"xxxxxxxxxxxxxxxxxxxxxxxx"` ✔
   - 用户标识符或会话标识符，用于追踪用户或会话。
 
-- `pc`: `"f69321d07a4c133dg01256e"` ✔
+- `pc`: `"xxxxxxxxxxxxxxxxxxxxxxxx"` ✔
   - 设备标识符或客户端标识符，用于标识用户的设备或客户端。
 
 - `s`: `"fadcb9de"`
