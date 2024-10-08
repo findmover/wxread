@@ -63,6 +63,8 @@ bash
 #### 5、完成推送
 
 
+![5ed32774727aadb47aeb32ca21db8342](pic/5ed32774727aadb47aeb32ca21db8342.jpg)
+
 
 ### 字段解释
 
