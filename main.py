@@ -61,7 +61,7 @@ def get_wr_skey():
 
 
 while True:
-    # 处理数据
+    # 处理数据（后端只需要ct字段和s字段正确即可）
     print(f"-------------------第{num}次，共阅读{num * 0.5}分钟-------------------")
     data['ct'] = int(time.time())
     data['ts'] = int(time.time() * 1000)
