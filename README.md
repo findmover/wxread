@@ -1,6 +1,6 @@
 ## attention     
 
-1.只需要完成签到将num次数200->2，num每次为30秒，200即100min
+1.只需要完成签到将num次数200->2，num每次为30秒，200即100min。<br>
 2.对于issue中提出的“阅读时间没有增加”，“增加时间与刷的时间不对等”建议替换capture.py中的【headers】、【cookies】字段，【data】字段保留。
 
 
