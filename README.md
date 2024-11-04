@@ -1,6 +1,7 @@
 ## attention     
 
-只需要完成签到将num次数200->2，num每次为30秒，200即100min
+1.只需要完成签到将num次数200->2，num每次为30秒，200即100min
+2.对于issue中提出的“阅读时间没有增加”，“增加时间与刷的时间不对等”建议替换capture.py中的【headers】、【cookies】字段，【data】字段保留。
 
 
 ## 序
@@ -17,9 +18,9 @@
 4. 比较市面上的ADB调试器、自动阅读器，本脚本实现了轻量化编写，部署服务器即可运行，无需更多环境条件。
 5. 脚本JS逆向分析各接口请求，分析各字段的拼接方式，并对字段进行加密、计算处理使得服务器能够成功响应（`{'succ': 1, 'synckey': 2060028311}`，表示数据字段正常）。
 
-## 操作步骤（v2.0）
+## 操作步骤（v3.0）
 
-1、脚本逻辑还是比较简单的，运行`main.py`即可，依赖自行安装。大部分代码不需要改动，在微信阅读官网 [微信读书 (qq.com)](https://weread.qq.com/) 搜索【三体】点开阅读点击下一页进行抓包，抓到`read`接口 `https://weread.qq.com/web/book/read`，如果返回格式正常（如：
+1、脚本逻辑还是比较简单的，main.py与push.py代码不需要改动。在微信阅读官网 [微信读书 (qq.com)](https://weread.qq.com/) 搜索【三体】点开阅读点击下一页进行抓包，抓到`read`接口 `https://weread.qq.com/web/book/read`，如果返回格式正常（如：
 
 ```
 json复制代码{
@@ -28,7 +29,7 @@ json复制代码{
 }
 ```
 
-右键复制为Bash格式，然后在 [Convert curl commands to Python (curlconverter.com)](https://curlconverter.com/python/) 转化为Python脚本，复制需要的headers、cookies与data字段替换到`capture.py`即可。
+右键复制为Bash格式，然后在 [Convert curl commands to Python (curlconverter.com)](https://curlconverter.com/python/) 转化为Python脚本，复制需要的headers与cookies字段替换到`capture.py`（data字段保留），运行`main.py`即可，依赖自行安装。
 
 2、服务器运行，在你的服务器上有Python运行环境即可，使用`cron`定义自动运行。（如：
 
