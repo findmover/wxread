@@ -1,4 +1,5 @@
 # ------------------------这是一个模版------------------------
+#保留
 data = {
     "appId": "wb182564874663h152492176",
     "b": "ce032b305a9bc1ce0b0dd2a",
@@ -16,6 +17,7 @@ data = {
     "pc": "080327b07a4c3259g018787",
 }
 
+#对应替换
 headers = {
     "accept": "application/json, text/plain, */*",
     "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6,ko;q=0.5",
@@ -37,6 +39,7 @@ headers = {
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0"
 }
 
+#对应替换
 cookies = {
     "RK": "oxEY1bTnXf",
     "ptcz": "53e3b35a9486dd63c4d06430b05aa169402117fc407dc5cc9329b41e59f62e2b",
