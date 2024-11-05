@@ -115,3 +115,12 @@ bash复制代码
 
 - `s`: `"fadcb9de"`
   - 校验和或哈希值，用于验证请求数据的完整性。
+
+## github action部署
+- `WXREAD_HEADERS`: 微信读书请求头
+- `WXREAD_COOKIES`: 微信读书cookies
+- `READ_NUM`: (可选) 阅读时长, 每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次。默认200
+- `PUSH_METHOD`: (可选) 推送方式，可选`pushplus`或`telegram`
+- `PUSHPLUS_TOKEN`: (可选) pushplus token
+- `TELEGRAM_BOT_TOKEN`: (可选) telegram bot token
+- `TELEGRAM_CHAT_ID`: (可选) telegram chat id
