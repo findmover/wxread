@@ -1,9 +1,9 @@
 name: Deploy
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: '0 17 * * *'  # 每天北京时间凌晨1点执行（UTC时间17点）
+  workflow_dispatch:  # 手动触发
 
 jobs:
   deploy:
@@ -32,6 +32,5 @@ jobs:
         PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-
       run: |
         python main.py
