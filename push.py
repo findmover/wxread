@@ -1,4 +1,5 @@
 # push.py
+import os
 import requests
 import logging
 
@@ -48,7 +49,7 @@ class PushNotification:
             logger.error("Telegram通知发送失败: %s", str(e))
             return False
 
-def push(content, method="将此处修改为pushplus/telegram", pushplus_token=None, telegram_bot_token=None, telegram_chat_id=None):
+def push(content, method=os.getenv("PUSH_METHOD", "将此处修改为pushplus/telegram"), pushplus_token=None, telegram_bot_token=None, telegram_chat_id=None):
     """
     统一推送接口
     """
@@ -56,13 +57,13 @@ def push(content, method="将此处修改为pushplus/telegram", pushplus_token=N
     
     if method == "pushplus":
         if not pushplus_token:
-            pushplus_token = "YOUR_PUSHPLUS_TOKEN"  # 替换为你的PushPlus token
+            pushplus_token = os.getenv("PUSHPLUS_TOKEN", "YOUR_PUSHPLUS_TOKEN")   # 替换为你的PushPlus token
         return notifier.push_pushplus(content, pushplus_token)
     
     elif method == "telegram":
         if not all([telegram_bot_token, telegram_chat_id]):
-            telegram_bot_token = "YOUR_BOT_TOKEN"  # 替换为你的Telegram bot token
-            telegram_chat_id = "YOUR_CHAT_ID"  # 替换为你的Telegram chat ID
+            telegram_bot_token = os.getenv("TELEGRAM_BOT_TOKEN", "YOUR_BOT_TOKEN")  # 替换为你的Telegram bot token
+            telegram_chat_id = os.getenv("TELEGRAM_CHAT_ID", "YOUR_CHAT_ID")  # 替换为你的Telegram chat ID
         return notifier.push_telegram(content, telegram_bot_token, telegram_chat_id)
     
     else:

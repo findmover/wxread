@@ -1,3 +1,5 @@
+import os
+import json
 import requests
 import json
 import time
@@ -5,7 +7,7 @@ import hashlib
 import urllib.parse
 import random
 from push import push
-from capture import headers, cookies, data
+from capture import headers as local_headers, cookies as local_cookies, data
 
 url = "https://weread.qq.com/web/book/read"
 renew_url = "https://weread.qq.com/web/login/renewal"
@@ -15,6 +17,16 @@ cookie_data = {"rq": "%2Fweb%2Fbook%2Fread"}
 key = "3c5c8717f3daf09iop3423zafeqoi"
 num = 1
 
+# 从环境变量获取 headers 和 cookies
+env_headers = os.getenv('WXREAD_HEADERS')
+env_cookies = os.getenv('WXREAD_COOKIES')
+
+# 如果环境变量存在，则使用环境变量中的值，否则使用本地定义的值
+headers = json.loads(env_headers) if env_headers else local_headers
+cookies = json.loads(env_cookies) if env_cookies else local_cookies
+
+# 从环境变量获取 num 的值，如果不存在则使用默认值 200
+READ_NUM = int(os.getenv('READ_NUM', 200))
 
 def encode_data(data, keys_to_include=None):
     sorted_keys = sorted(data.keys())
@@ -86,7 +98,7 @@ while True:
         num -= 1
 
     # 每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次
-    if num == 200:
+    if num == READ_NUM:
         print("阅读脚本运行已完成！")
         push("阅读脚本运行已完成！")
         break
