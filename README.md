@@ -18,9 +18,9 @@
 4. 比较市面上的ADB调试器、自动阅读器，本脚本实现了轻量化编写，部署服务器即可运行，无需更多环境条件。
 5. 脚本JS逆向分析各接口请求，分析各字段的拼接方式，并对字段进行加密、计算处理使得服务器能够成功响应（`{'succ': 1, 'synckey': 2060028311}`，表示数据字段正常）。
 
-## 操作步骤（v3.0）
+# 1.操作步骤（v3.0）
 
-1、脚本逻辑还是比较简单的，main.py与push.py代码不需要改动。在微信阅读官网 [微信读书 (qq.com)](https://weread.qq.com/) 搜索【三体】点开阅读点击下一页进行抓包，抓到`read`接口 `https://weread.qq.com/web/book/read`，如果返回格式正常（如：
+脚本逻辑还是比较简单的，main.py与push.py代码不需要改动。在微信阅读官网 [微信读书 (qq.com)](https://weread.qq.com/) 搜索【三体】点开阅读点击下一页进行抓包，抓到`read`接口 `https://weread.qq.com/web/book/read`，如果返回格式正常（如：
 
 ```
 json复制代码{
@@ -31,7 +31,18 @@ json复制代码{
 
 右键复制为Bash格式，然后在 [Convert curl commands to Python (curlconverter.com)](https://curlconverter.com/python/) 转化为Python脚本，复制需要的headers与cookies字段替换到`capture.py`（data字段保留），运行`main.py`即可，依赖自行安装。
 
-2、服务器运行，在你的服务器上有Python运行环境即可，使用`cron`定义自动运行。（如：
+# 2.github action部署
+- `WXREAD_HEADERS`(必填): 微信读书请求头
+- `WXREAD_COOKIES`(必填): 微信读书cookies
+- `READ_NUM`: (可选) 阅读时长, 每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次。默认200
+- `PUSH_METHOD`: (可选) 推送方式，可选`pushplus`或`telegram`
+- `PUSHPLUS_TOKEN`: (可选) pushplus token
+- `TELEGRAM_BOT_TOKEN`: (可选) telegram bot token
+- `TELEGRAM_CHAT_ID`: (可选) telegram chat id
+
+
+# 3.服务器运行（可选）
+在你的服务器上有Python运行环境即可，使用`cron`定义自动运行。（如：
 
 ```
 bash复制代码
@@ -40,7 +51,7 @@ bash复制代码
 
 意思为：【在每天两点时刻使用python所在位置编译器运行某个路径下的main.py脚本，同时将输出按每天的日期格式输出到对应日志中】可供参考）。
 
-3、Pushplus推送，更改你的Token即可。
+# 4、Pushplus推送，更改你的Token即可。
 ## 截图展示
 
 #### 1、运行结果
@@ -116,11 +127,3 @@ bash复制代码
 - `s`: `"fadcb9de"`
   - 校验和或哈希值，用于验证请求数据的完整性。
 
-## github action部署
-- `WXREAD_HEADERS`: 微信读书请求头
-- `WXREAD_COOKIES`: 微信读书cookies
-- `READ_NUM`: (可选) 阅读时长, 每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次。默认200
-- `PUSH_METHOD`: (可选) 推送方式，可选`pushplus`或`telegram`
-- `PUSHPLUS_TOKEN`: (可选) pushplus token
-- `TELEGRAM_BOT_TOKEN`: (可选) telegram bot token
-- `TELEGRAM_CHAT_ID`: (可选) telegram chat id
