@@ -22,7 +22,7 @@
 
 ## 操作步骤（v3.0）
 
-### 抓包准备
+### 1、抓包准备
 脚本逻辑还是比较简单的，main.py与push.py代码不需要改动。在微信阅读官网 [微信读书 (qq.com)](https://weread.qq.com/) 搜索【三体】点开阅读点击下一页进行抓包，抓到`read`接口 `https://weread.qq.com/web/book/read`，如果返回格式正常（如：
 
 ```
@@ -34,7 +34,7 @@ json复制代码{
 
 右键复制为Bash格式，然后在 [Convert curl commands to Python (curlconverter.com)](https://curlconverter.com/python/) 转化为Python脚本，复制需要的headers与cookies字段替换到`capture.py`（data字段保留），运行`main.py`即可，依赖自行安装。
 
-### 2.github action部署
+### 2、github action部署
 - `WXREAD_HEADERS`(必填): 微信读书请求头
 - `WXREAD_COOKIES`(必填): 微信读书cookies
 - `READ_NUM`: (可选) 阅读时长, 每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次。默认200
@@ -44,7 +44,7 @@ json复制代码{
 - `TELEGRAM_CHAT_ID`: (可选) telegram chat id
 
 
-### 3.服务器运行（可选）
+### 3、服务器运行（可选）
 在你的服务器上有Python运行环境即可，使用`cron`定义自动运行。（如：
 
 ```
