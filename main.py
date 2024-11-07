@@ -99,7 +99,7 @@ while True:
 
     if index == number:
         print("阅读脚本运行已完成！")
-        if method not in (None, ''):
+        if env_method not in (None, ''):
              push("阅读脚本运行已完成！",method)
         break
     # 确认无s字段
