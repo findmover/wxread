@@ -35,9 +35,10 @@ json复制代码{
 右键复制为Bash格式，然后在 [Convert curl commands to Python (curlconverter.com)](https://curlconverter.com/python/) 转化为Python脚本，复制需要的headers与cookies字段替换到`capture.py`（data字段保留），运行`main.py`即可，依赖自行安装。
 
 ### 2、github action部署
+
 - `WXREAD_HEADERS`(必填): 微信读书请求头
 - `WXREAD_COOKIES`(必填): 微信读书cookies
-- `READ_NUM`: (可选) 阅读时长, 每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次。默认200
+- `READ_NUM`: (可选) 阅读时长。默认120，每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次。
 - `PUSH_METHOD`: (可选) 推送方式，可选`pushplus`或`telegram`
 - `PUSHPLUS_TOKEN`: (可选) pushplus token
 - `TELEGRAM_BOT_TOKEN`: (可选) telegram bot token
@@ -54,7 +55,6 @@ bash复制代码
 
 意思为：【在每天两点时刻使用python所在位置编译器运行某个路径下的main.py脚本，同时将输出按每天的日期格式输出到对应日志中】可供参考）。
 
-### 4、Pushplus推送，更改你的Token即可。
 
 ***
 
