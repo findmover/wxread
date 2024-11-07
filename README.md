@@ -36,7 +36,7 @@ json复制代码{
 
 ### 2、github action部署运行（github运行）
 
-fork这个仓库，在仓库【Settings】-左侧列表【Secrets and variables】-【Actions】-右侧【Secrets】下方【Respository secrets】填入header、cookie及其它值的key和value，read_num填入【Variables】最下方。在本仓库【Actions】启用workflow，选择运行即可。
+fork这个仓库，在仓库【Settings】-左侧列表【Secrets and variables】-【Actions】-右侧【Secrets】下方【Respository secrets】填入header、cookie及其它值（去掉抓包得到的headers=，cookies=，填入后面的字典格式），read_num填入【Variables】最下方。在本仓库【Actions】启用workflow，选择运行即可。
 
 | Key                  | Value                                                             | 说明                                      |
 |----------------------|-------------------------------------------------------------------|-------------------------------------------|
