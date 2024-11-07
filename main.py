@@ -9,24 +9,23 @@ import random
 from push import push
 from capture import headers as local_headers, cookies as local_cookies, data
 
+# 加密盐
+key = "3c5c8717f3daf09iop3423zafeqoi"
 url = "https://weread.qq.com/web/book/read"
 renew_url = "https://weread.qq.com/web/login/renewal"
 cookie_data = {"rq": "%2Fweb%2Fbook%2Fread"}
 
-# 加密盐
-key = "3c5c8717f3daf09iop3423zafeqoi"
-num = 1
 
-# 从环境变量获取 headers 和 cookies
+# github action部署用
+# 从环境变量获取 headers、cookies以及READ_NUM(如果不存在使用默认本地值)
+# READ_NUM每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次
 env_headers = os.getenv('WXREAD_HEADERS')
 env_cookies = os.getenv('WXREAD_COOKIES')
+READ_NUM = int(os.getenv('READ_NUM', 120))
 
-# 如果环境变量存在，则使用环境变量中的值，否则使用本地定义的值
 headers = json.loads(env_headers) if env_headers else local_headers
 cookies = json.loads(env_cookies) if env_cookies else local_cookies
 
-# 从环境变量获取 num 的值，如果不存在则使用默认值 200
-READ_NUM = int(os.getenv('READ_NUM', 200))
 
 def encode_data(data, keys_to_include=None):
     sorted_keys = sorted(data.keys())
@@ -97,7 +96,6 @@ while True:
         cookies['wr_skey'] = get_wr_skey()
         num -= 1
 
-    # 每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次
     if num == READ_NUM:
         print("阅读脚本运行已完成！")
         push("阅读脚本运行已完成！")
