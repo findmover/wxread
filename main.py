@@ -10,24 +10,23 @@ from push import push
 from capture import headers as local_headers, cookies as local_cookies, data
 
 # 加密盐及其它默认值
-num=1
+index=1
 key = "3c5c8717f3daf09iop3423zafeqoi"
 url = "https://weread.qq.com/web/book/read"
 renew_url = "https://weread.qq.com/web/login/renewal"
 cookie_data = {"rq": "%2Fweb%2Fbook%2Fread"}
 
 # github action部署用
-# 从环境变量获取 headers、cookies以及READ_NUM(如果不存在使用默认本地值)
-# READ_NUM每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次
+# 从环境变量获取 headers、cookies等值(如果不存在使用默认本地值)
+# 每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次
 env_headers = os.getenv('WXREAD_HEADERS')
-method=os.getenv('PUSH_METHOD')
+env_method=os.getenv('PUSH_METHOD')
 env_cookies = os.getenv('WXREAD_COOKIES')
-#READ_NUM = int(os.getenv('READ_NUM', 120))
+env_num = os.getenv('READ_NUM', 120)
 
 headers = json.loads(env_headers) if env_headers else local_headers
 cookies = json.loads(env_cookies) if env_cookies else local_cookies
-READ_NUM = int(os.getenv('READ_NUM', '120')) if os.getenv('READ_NUM', '120') != '' else 120
-
+number = int(env_num) if env_num not in (None, '') else 120
 
 def encode_data(data, keys_to_include=None):
     sorted_keys = sorted(data.keys())
@@ -75,7 +74,7 @@ def get_wr_skey():
 
 while True:
     # 处理数据（后端只需要ct字段和s字段正确即可）
-    print(f"-------------------第{num}次，共阅读{num * 0.5}分钟-------------------")
+    print(f"-------------------第{index}次，共阅读{index * 0.5}分钟-------------------")
     data['ct'] = int(time.time())
     data['ts'] = int(time.time() * 1000)
     data['rn'] = random.randint(0, 1000)  # 1000以内的随机整数值
@@ -91,14 +90,14 @@ while True:
 
     if 'succ' in resData:
         print("数据格式正确，阅读进度有效！")
-        num += 1
+        index += 1
         time.sleep(30)
     else:
         print("数据格式问题,尝试初始化cookie值")
         cookies['wr_skey'] = get_wr_skey()
-        num -= 1
+        index -= 1
 
-    if num == READ_NUM:
+    if index == READ_NUM:
         print("阅读脚本运行已完成！")
         if method is not None:
              push("阅读脚本运行已完成！",method)
