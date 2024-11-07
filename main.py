@@ -9,12 +9,12 @@ import random
 from push import push
 from capture import headers as local_headers, cookies as local_cookies, data
 
-# 加密盐
+# 加密盐及其它默认值
 key = "3c5c8717f3daf09iop3423zafeqoi"
 url = "https://weread.qq.com/web/book/read"
 renew_url = "https://weread.qq.com/web/login/renewal"
 cookie_data = {"rq": "%2Fweb%2Fbook%2Fread"}
-
+num=1
 
 # github action部署用
 # 从环境变量获取 headers、cookies以及READ_NUM(如果不存在使用默认本地值)
