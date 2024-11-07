@@ -97,7 +97,7 @@ while True:
         cookies['wr_skey'] = get_wr_skey()
         index -= 1
 
-    if index == READ_NUM:
+    if index == number:
         print("阅读脚本运行已完成！")
         if method is not None:
              push("阅读脚本运行已完成！",method)
