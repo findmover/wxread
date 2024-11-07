@@ -1,6 +1,6 @@
 ## attention     
 
-1.只需要完成签到将num次数200->2，num每次为30秒，200即100min。<br>
+1.只需要完成签到将num次数120->2，num每次为30秒，200即100min。<br>
 2.对于issue中提出的“阅读时间没有增加”，“增加时间与刷的时间不对等”建议替换capture.py中的【headers】、【cookies】字段。保留【data】字段。
 
 
@@ -12,7 +12,7 @@
 
 针对微信读书阅读挑战赛编写的脚本：
 
-1. 能进行刷阅读时长，且时长默认计入排行榜、挑战赛等。（指定200分钟）
+1. 能进行刷阅读时长，且时长默认计入排行榜、挑战赛等。（指定120分钟）
 2. 可部署服务器每天定时运行脚本并推送到微信。
 3. 一次抓包，长时间使用。对于Cookie更新问题给出了自动获取Cookie更新值的解决方案。
 4. 比较市面上的ADB调试器、自动阅读器，本脚本实现了轻量化编写，部署服务器即可运行，无需更多环境条件。
@@ -22,7 +22,7 @@
 
 ## 操作步骤（v3.0）
 
-### 1、抓包准备
+### 1、抓包准备（适合本地运行）
 脚本逻辑还是比较简单的，main.py与push.py代码不需要改动。在微信阅读官网 [微信读书 (qq.com)](https://weread.qq.com/) 搜索【三体】点开阅读点击下一页进行抓包，抓到`read`接口 `https://weread.qq.com/web/book/read`，如果返回格式正常（如：
 
 ```
@@ -34,15 +34,21 @@ json复制代码{
 
 右键复制为Bash格式，然后在 [Convert curl commands to Python (curlconverter.com)](https://curlconverter.com/python/) 转化为Python脚本，复制需要的headers与cookies字段替换到`capture.py`（data字段保留），运行`main.py`即可，依赖自行安装。
 
-### 2、github action部署
+### 2、github action部署运行（github运行）
 
-- `WXREAD_HEADERS`(必填): 微信读书请求头
-- `WXREAD_COOKIES`(必填): 微信读书cookies
-- `READ_NUM`: (可选) 阅读时长。默认120，每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次。
-- `PUSH_METHOD`: (可选) 推送方式，可选`pushplus`或`telegram`
-- `PUSHPLUS_TOKEN`: (可选) pushplus token
-- `TELEGRAM_BOT_TOKEN`: (可选) telegram bot token
-- `TELEGRAM_CHAT_ID`: (可选) telegram chat id
+fork这个仓库，在仓库【Settings】-左侧列表【Secrets and variables】-【Actions】-右侧【Secrets】下方【Respository secrets】填入header、cookie及其它值的key和value，read_num填入【Variables】下方（对应key和value）。在本仓库【Actions】启用workflow，选择运行即可。
+
+| Key                  | Value                                                             | 说明                                      |
+|----------------------|-------------------------------------------------------------------|-------------------------------------------|
+| `WXREAD_HEADERS`    | 微信读书headers (必填)                                              | 必须提供有效的请求头                     |
+| `WXREAD_COOKIES`     | 微信读书cookies (必填)                                           | 必须提供有效的cookies                    |
+| `READ_NUM`           | 阅读时长，每次代表30秒(可选)                                   | 控制阅读时长，默认120分钟                     |
+| `PUSH_METHOD`        | 推送方式，可选值为 `pushplus` 或 `telegram` (可选)                 | 选择推送方式，默认不推送                             |
+| `PUSHPLUS_TOKEN`     | pushplus token (可选)                                            | 仅在选择 `pushplus` 时需要填写          |
+| `TELEGRAM_BOT_TOKEN` | telegram bot token (可选)                                        | 仅在选择 `telegram` 时需要填写         |
+| `TELEGRAM_CHAT_ID`   | telegram chat id (可选)                                          | 仅在选择 `telegram` 时需要填写         |
+
+![企业微信截图_17309442135616](https://github.com/user-attachments/assets/69694f8a-e6be-4c3a-820a-ac79ec2a22e5)
 
 
 ### 3、服务器运行（可选）
