@@ -22,10 +22,11 @@ cookie_data = {"rq": "%2Fweb%2Fbook%2Fread"}
 env_headers = os.getenv('WXREAD_HEADERS')
 method=os.getenv('PUSH_METHOD')
 env_cookies = os.getenv('WXREAD_COOKIES')
-READ_NUM = int(os.getenv('READ_NUM', 120))
+#READ_NUM = int(os.getenv('READ_NUM', 120))
 
 headers = json.loads(env_headers) if env_headers else local_headers
 cookies = json.loads(env_cookies) if env_cookies else local_cookies
+READ_NUM = int(os.getenv('READ_NUM', '120')) if os.getenv('READ_NUM', '120') != '' else 120
 
 
 def encode_data(data, keys_to_include=None):
