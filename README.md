@@ -43,7 +43,7 @@ fork这个仓库，在仓库【Settings】-左侧列表【Secrets and variables�
 |----------------------|-------------------------------------------------------------------|-------------------------------------------|
 | `WXREAD_HEADERS`    | 微信读书headers (必填)                                              | 必须提供有效的请求头                     |
 | `WXREAD_COOKIES`     | 微信读书cookies (必填)                                           | 必须提供有效的cookies                    |
-| `READ_NUM`           | 阅读时长，每次代表30秒(可选)                                   | 控制阅读时长，默认120分钟                     |
+| `READ_NUM`           | 阅读时长，每次代表30秒(可选)                                   | 控制阅读时长，默认60分钟                     |
 | `PUSH_METHOD`        | 推送方式，可选值为 `pushplus` 或 `telegram` (可选)                 | 选择推送方式，默认不推送                             |
 | `PUSHPLUS_TOKEN`     | pushplus token (可选)                                            | 仅在选择 `pushplus` 时需要填写          |
 | `TELEGRAM_BOT_TOKEN` | telegram bot token (可选)                                        | 仅在选择 `telegram` 时需要填写         |
