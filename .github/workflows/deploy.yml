@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: AutoRead  # 指定环境，放在 `jobs` 下
 
     steps:
     - name: Checkout repository
@@ -24,11 +25,10 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run deployment script
-      environment: AutoRead
       env:
         WXREAD_HEADERS: ${{ secrets.WXREAD_HEADERS }}
         WXREAD_COOKIES: ${{ secrets.WXREAD_COOKIES }}
-        READ_NUM: ${{ vars.READ_NUM }}  # 使用 Repository Variables
+        READ_NUM: ${{ vars.READ_NUM }}
         PUSH_METHOD: ${{ secrets.PUSH_METHOD }}
         PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
