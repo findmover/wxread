@@ -84,6 +84,7 @@ while index <= number:
 
     data.pop('s')
 
-print("🎉 阅读脚本已完成！")
+Read_time = int(env_num) / 2
+print(f"🎉 阅读脚本已完成！\n阅读时长：{Read_time} 分钟!")
 if env_method not in (None, ''):
     push("阅读脚本已完成！", env_method)
