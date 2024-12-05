@@ -66,7 +66,7 @@ def get_wr_skey():
     return None
 
 
-index = 1
+index = 0
 while index <= number:
     data['ct'] = int(time.time())
     data['ts'] = int(time.time() * 1000)
@@ -75,7 +75,7 @@ while index <= number:
     data['s'] = cal_hash(encode_data(data))
 
     # print(f"\n尝试第 {index} 次阅读...")
-    logging.info(f"\n尝试第 {index} 次阅读...")
+    logging.info(f"\n尝试第 {1+index} 次阅读...")
     response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
     resData = response.json()
     # print(resData)
