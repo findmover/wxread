@@ -24,6 +24,7 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run deployment script
+      environment: AutoRead
       env:
         WXREAD_HEADERS: ${{ secrets.WXREAD_HEADERS }}
         WXREAD_COOKIES: ${{ secrets.WXREAD_COOKIES }}
