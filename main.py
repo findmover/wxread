@@ -7,6 +7,17 @@ import urllib.parse
 import random
 from push import push
 from capture import headers as local_headers, cookies as local_cookies, data
+import logging
+
+# 配置日志记录
+logging.basicConfig(
+    level=logging.INFO,  # 设置日志级别
+    format='%(asctime)s - %(levelname)s - %(message)s',  # 日志格式
+    handlers=[
+        logging.StreamHandler()  # 输出到控制台
+    ]
+)
+logger = logging.getLogger(__name__)
 
 # 加密盐及其它默认值
 KEY = "3c5c8717f3daf09iop3423zafeqoi"
@@ -25,6 +36,7 @@ env_method = os.getenv('PUSH_METHOD')
 headers = json.loads(json.dumps(eval(env_headers))) if env_headers else local_headers
 cookies = json.loads(json.dumps(eval(env_cookies))) if env_cookies else local_cookies
 number = int(env_num) if env_num not in (None, '') else 120
+
 
 
 def encode_data(data):
@@ -62,29 +74,37 @@ while index <= number:
     data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
     data['s'] = cal_hash(encode_data(data))
 
-    print(f"\n尝试第 {index} 次阅读...")
+    # print(f"\n尝试第 {index} 次阅读...")
+    logging.info(f"\n尝试第 {index} 次阅读...")
     response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
     resData = response.json()
-    print(resData)
+    # print(resData)
+    logging.info(resData)
 
     if 'succ' in resData:
         index += 1
         time.sleep(30)
-        print(f"✅ 阅读成功，阅读进度：{index * 0.5} 分钟")
+        # print(f"✅ 阅读成功，阅读进度：{index * 0.5} 分钟")
+        logging.info(f"✅ 阅读成功，阅读进度：{index * 0.5} 分钟")
 
     else:
-        print("❌ cookie 已过期，尝试刷新...")
+        # print("❌ cookie 已过期，尝试刷新...")
+        logging.warning("❌ cookie 已过期，尝试刷新...")
         new_skey = get_wr_skey()
         if new_skey:
             cookies['wr_skey'] = new_skey
-            print(f"✅ 密钥刷新成功，新密钥：{new_skey}\n🔄 重新本次阅读。")
+            # print(f"✅ 密钥刷新成功，新密钥：{new_skey}\n🔄 重新本次阅读。")
+            logging.info(f"✅ 密钥刷新成功，新密钥：{new_skey}\n🔄 重新本次阅读。")
         else:
-            print("⚠ 无法获取新密钥，终止运行。")
+            # print("⚠ 无法获取新密钥，终止运行。")
+            logging.error("⚠ 无法获取新密钥，终止运行。")
             break
 
     data.pop('s')
 
 Read_time = int(env_num) / 2
-print(f"🎉 阅读脚本已完成！\n阅读时长：{Read_time} 分钟!")
+# print(f"🎉 阅读脚本已完成！\n阅读时长：{Read_time} 分钟!")
+logging.info(f"🎉 阅读脚本已完成！\n阅读时长：{Read_time} 分钟!")
 if env_method not in (None, ''):
-    push("阅读脚本已完成！", env_method)
+    # push("阅读脚本已完成！", env_method)
+    push(f"🎉 阅读脚本已完成！\n阅读时长：{Read_time} 分钟!", env_method)
