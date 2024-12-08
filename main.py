@@ -99,7 +99,8 @@ while index <= number:
             # print("⚠ 无法获取新密钥，终止运行。")
             logging.error("⚠ 无法获取新密钥，终止运行。")
             push("❌ 无法获取新密钥，终止运行。\n微信读书签到失败！", env_method)
-            break
+            # throw error
+            raise Exception("❌ 无法获取新密钥，终止运行。")
 
     data.pop('s')
 
