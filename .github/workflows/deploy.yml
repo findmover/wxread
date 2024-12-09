@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: AutoRead  # 指定环境，放在 `jobs` 下
+    environment: AutoRead  # 指定环境
 
     steps:
     - name: Checkout repository
@@ -24,7 +24,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run deployment script
+    - name: Run AutoWeRead script
       env:
         WXREAD_HEADERS: ${{ secrets.WXREAD_HEADERS }}
         WXREAD_COOKIES: ${{ secrets.WXREAD_COOKIES }}
