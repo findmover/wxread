@@ -33,11 +33,13 @@ env_cookies = os.getenv('WXREAD_COOKIES')
 env_num = os.getenv('READ_NUM')
 env_method = os.getenv('PUSH_METHOD')
 
+
 headers = json.loads(json.dumps(eval(env_headers))) if env_headers else local_headers
 cookies = json.loads(json.dumps(eval(env_cookies))) if env_cookies else local_cookies
 number = int(env_num) if env_num not in (None, '') else 120
 
-
+# add random number to number
+number = random.randint(10, 30) + number
 
 def encode_data(data):
     return '&'.join(f"{k}={urllib.parse.quote(str(data[k]), safe='')}" for k in sorted(data.keys()))
