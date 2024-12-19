@@ -1,8 +1,8 @@
-<center>
+<p align="center">
 *推一下自己和朋友搭的一个机场，前期试运营，优惠从优*<br>
 【科学上网】机场地址--->[R星云](https://web.rstar.cloud/)<---机场地址【科学上网】<br>
 *觉得这个项目对你有帮助恰巧你需要节点的话可以看一下*
-</center>
+</p>
 
    
 ## Attention 📢
