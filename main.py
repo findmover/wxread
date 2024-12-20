@@ -97,4 +97,5 @@ if env_method not in (None, ''):
         f"💯 完成率：{completion_rate:.1f}%\n"
         f"⏱️ 阅读时长：{total_time}分钟"
     )
+    print("⏱️ 开始推送...")
     push(message, env_method)
