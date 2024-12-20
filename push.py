@@ -26,6 +26,7 @@ class PushNotification:
             response = requests.get(self.pushplus_url, headers=self.headers, params=params)
             response.raise_for_status()
             logger.info("PushPlus Response: %s", response.text)
+            print(response.text)
             return True
         except Exception as e:
             logger.error("PushPlus通知发送失败: %s", str(e))
@@ -44,6 +45,7 @@ class PushNotification:
             response = requests.post(url, json=params)
             response.raise_for_status()
             logger.info("Telegram Response: %s", response.text)
+            print(response.text)
             return True
         except Exception as e:
             logger.error("Telegram通知发送失败: %s", str(e))
