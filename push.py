@@ -2,6 +2,8 @@
 import os
 import requests
 import logging
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 logger = logging.getLogger(__name__)
 
@@ -12,6 +14,10 @@ class PushNotification:
         self.headers = {
             'User-Agent': 'Apifox/1.0.0 (https://apifox.com)'
         }
+        self.session = requests.Session()
+        retries = Retry(total=5, backoff_factor=1, status_forcelist=[104, 500, 502, 503, 504])
+        self.session.mount('http://', HTTPAdapter(max_retries=retries))
+        self.session.mount('https://', HTTPAdapter(max_retries=retries))
 
     def push_pushplus(self, content, token):
         """
@@ -22,11 +28,12 @@ class PushNotification:
                 "token": token,
                 "content": content
             }
-            response = requests.get(self.pushplus_url, headers=self.headers, params=params)
+            response = self.session.get(self.pushplus_url, headers=self.headers, params=params, timeout=10)
             response.raise_for_status()
             logger.info("PushPlus Response: %s", response.text)
+            print(response.text)
             return True
-        except Exception as e:
+        except requests.exceptions.RequestException as e:
             logger.error("PushPlus通知发送失败: %s", str(e))
             return False
 
@@ -40,11 +47,12 @@ class PushNotification:
                 "chat_id": chat_id,
                 "text": content
             }
-            response = requests.post(url, json=params)
+            response = self.session.post(url, json=params, timeout=10)
             response.raise_for_status()
             logger.info("Telegram Response: %s", response.text)
+            print(response.text)
             return True
-        except Exception as e:
+        except requests.exceptions.RequestException as e:
             logger.error("Telegram通知发送失败: %s", str(e))
             return False
 

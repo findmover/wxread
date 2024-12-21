@@ -110,5 +110,16 @@ Read_time = int(env_num) / 2
 # print(f"🎉 阅读脚本已完成！\n阅读时长：{Read_time} 分钟!")
 logging.info(f"🎉 阅读脚本已完成！\n阅读时长：{Read_time} 分钟!")
 if env_method not in (None, ''):
-    # push("阅读脚本已完成！", env_method)
-    push(f"🎉 阅读脚本已完成！\n阅读时长：{Read_time} 分钟!", env_method)
+    completed = index - 1  # 实际完成的次数
+    total_time = completed * 0.5  # 阅读时长（分钟）
+    completion_rate = (completed / number) * 100  # 完成率
+
+    message = (
+        "微信读书自动阅读完成！\n"
+        f"📚 目标次数：{number}次\n"
+        f"✅ 成功次数：{completed}次\n"
+        f"💯 完成率：{completion_rate:.1f}%\n"
+        f"⏱️ 阅读时长：{total_time}分钟"
+    )
+    logging.info(message)
+    push(message, env_method)

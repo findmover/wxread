@@ -1,3 +1,8 @@
+*推一下自己和朋友搭的一个机场，前期试运营，优惠从优*<br>
+【科学上网】机场地址--->[R星云](https://web.rstar.cloud/)<---机场地址【科学上网】<br>
+*觉得这个项目对你有帮助恰巧你需要节点的话可以看一下*
+
+   
 ## Attention 📢
 
 1. **签到次数调整**：只需完成签到将`num`次数从120调整为2，每次`num`为30秒，200即100分钟。
@@ -23,7 +28,7 @@
 
 ### 1. 抓包准备（适合本地运行）
 
-脚本逻辑还是比较简单的，`main.py`与`push.py`代码不需要改动。在微信阅读官网 [微信读书 (qq.com)](https://weread.qq.com/) 搜索【三体】点开阅读点击下一页进行抓包，抓到`read`接口 `https://weread.qq.com/web/book/read`，如果返回格式正常（如：
+脚本逻辑还是比较简单的，`main.py`与`push.py`代码不需要改动。在微信阅读官网 [微信读书](https://weread.qq.com/) 搜索【三体】点开阅读点击下一页进行抓包，抓到`read`接口 `https://weread.qq.com/web/book/read`，如果返回格式正常（如：
 
 ```json
 {
@@ -32,7 +37,7 @@
 }
 ```
 
-右键复制为Bash格式，然后在 [Convert curl commands to Python (curlconverter.com)](https://curlconverter.com/python/) 转化为Python脚本，复制需要的headers与cookies字段替换到`capture.py`（data字段保留），运行`main.py`即可，依赖自行安装。
+右键复制为Bash格式，然后在 [Convert](https://curlconverter.com/python/) 转化为Python脚本，复制需要的headers与cookies字段替换到`capture.py`（data字段保留），运行`main.py`即可，依赖自行安装。
 
 ### 2. GitHub Action部署运行（GitHub运行）
 
