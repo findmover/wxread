@@ -5,7 +5,8 @@ import logging
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
-logging.basicConfig(level=logging.INFO)
+# logging.basicConfig(level=logging.INFO)
+# use the same logger as main.py
 logger = logging.getLogger(__name__)
 
 class PushNotification:
