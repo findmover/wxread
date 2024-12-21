@@ -39,9 +39,22 @@
 
 右键复制为Bash格式，然后在 [Convert](https://curlconverter.com/python/) 转化为Python脚本，复制需要的headers与cookies字段替换到`capture.py`（data字段保留），运行`main.py`即可，依赖自行安装。
 
-### 2. GitHub Action部署运行（GitHub运行）
+### 2. 设置 GitHub Secrets 和 Variables：
 
-Fork这个仓库，在仓库【Settings】-左侧列表【Secrets and variables】-【Actions】-右侧【Secrets】下方【Repository secrets】填入header、cookie及其它值（去掉抓包得到的`headers=`，`cookies=`，填入后面的字典格式），`read_num`填入【Variables】最下方。在本仓库【Actions】启用workflow，选择运行即可。
+#### 创建 GitHub Environment（环境配置）：
+
+- 为了在 GitHub Actions 中更好地管理环境变量，我们建议创建一个 **Environment** 来管理你的运行配置。你可以在 **Settings** -> **Environments** 中创建一个新的环境，命名为 `AutoRead`（或根据你的需求命名，并确保与 [deploy.yml](.github/workflows/deploy.yml) 中的环境名称匹配）。
+  
+- 在该环境中，你可以配置一些额外的环境变量（例如，配置任务的时间窗口或其他配置）。
+
+- 在 Fork 后的仓库中，进入 **Settings** -> 左侧列表中的 **Secrets and variables** -> **Actions**，然后在右侧的 **Repository secrets** 中添加如下值：
+  - `WXREAD_HEADERS`：你的 headers 字典（去掉抓包得到的 `headers=`，只需填写字典内容）。
+  - `WXREAD_COOKIES`：你的 cookies 字典（去掉抓包得到的 `cookies=`，只需填写字典内容）。
+  - `PUSH_METHOD`：推送方法，可以填写你想使用的推送方式（例如，`wechat` 或其他自定义推送方法）。
+  - `PUSHPLUS_TOKEN`: PushPlus 推送Token。
+  
+- 然后，在 **Variables** 部分，最下方添加变量：
+  - `READ_NUM`：设定每次阅读的目标次数，例如：`120`（表示需要执行 120 次阅读）。
 
 | Key                  | Value                                                             | 说明                                      |
 |----------------------|-------------------------------------------------------------------|-------------------------------------------|

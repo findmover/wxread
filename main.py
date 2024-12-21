@@ -106,8 +106,8 @@ while index <= number:
 
     data.pop('s')
 
-Read_time = int(env_num) / 2
-# print(f"🎉 阅读脚本已完成！\n阅读时长：{Read_time} 分钟!")
+Read_time = int(number) / 2
+
 logging.info(f"🎉 阅读脚本已完成！\n阅读时长：{Read_time} 分钟!")
 if env_method not in (None, ''):
     completed = index - 1  # 实际完成的次数
