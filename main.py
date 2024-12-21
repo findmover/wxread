@@ -37,6 +37,9 @@ headers = json.loads(json.dumps(eval(env_headers))) if env_headers else local_he
 cookies = json.loads(json.dumps(eval(env_cookies))) if env_cookies else local_cookies
 number = int(env_num) if env_num not in (None, '') else 120
 
+# add random read time
+number += random.randint(10, 30)
+
 # logging the headers and cookies and number
 logging.info(f"headers: {headers}")
 logging.info(f"cookies: {cookies}")
@@ -69,7 +72,7 @@ def get_wr_skey():
     return None
 
 
-index = 1
+index = 0
 while index <= number:
     data['ct'] = int(time.time())
     data['ts'] = int(time.time() * 1000)
@@ -77,7 +80,7 @@ while index <= number:
     data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
     data['s'] = cal_hash(encode_data(data))
 
-    logging.info(f"尝试第 {index} 次阅读...")
+    logging.info(f"尝试第 {index+1} 次阅读...")
     logging.info(f"请求参数：{data}")
     response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
     resData = response.json()
@@ -89,7 +92,7 @@ while index <= number:
         logging.info(f"✅ 阅读成功，阅读进度：{index * 0.5} 分钟")
 
     else:
-        logging.warning("cookie 已过期，尝试刷新...")
+        logging.warning("❌ cookie 已过期，尝试刷新...")
         new_skey = get_wr_skey()
         if new_skey:
             cookies['wr_skey'] = new_skey
@@ -101,7 +104,8 @@ while index <= number:
 
     data.pop('s')
 
-# print("🎉 阅读脚本已完成！")
+
+
 logging.info("🎉 阅读脚本已完成！")
 if env_method not in (None, ''):
     completed = index - 1  # 实际完成的次数
@@ -109,12 +113,12 @@ if env_method not in (None, ''):
     completion_rate = (completed / number) * 100  # 完成率
 
     message = (
-        "微信读书自动阅读完成！\n"
+        "🎉 微信读书自动阅读完成！\n"
         f"📚 目标次数：{number}次\n"
         f"✅ 成功次数：{completed}次\n"
         f"💯 完成率：{completion_rate:.1f}%\n"
         f"⏱️ 阅读时长：{total_time}分钟"
     )
-    # print("⏱️ 开始推送...")
+    logging.info(message)
     logging.info("⏱️ 开始推送...")
     push(message, env_method)
