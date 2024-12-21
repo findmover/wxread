@@ -99,6 +99,8 @@ while index <= number:
             logging.info(f"✅ 密钥刷新成功，新密钥：{new_skey}\n🔄 重新本次阅读。")
         else:
             logging.error("❌ 无法获取新密钥，终止运行。")
+            # push failure message
+            push("❌ 无法获取新密钥，终止运行。", env_method)
             # it should throw an exception here
             raise Exception("❌ 无法获取新密钥，终止运行。")
 
