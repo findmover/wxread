@@ -81,10 +81,10 @@ while index <= number:
     data['s'] = cal_hash(encode_data(data))
 
     logging.info(f"尝试第 {index+1} 次阅读...")
-    logging.info(f"请求参数：{data}")
+    # logging.info(f"请求参数：{data}")
     response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
     resData = response.json()
-    logging.info(f"响应数据：{resData}")
+    # logging.info(f"响应数据：{resData}")
 
     if 'succ' in resData:
         index += 1
