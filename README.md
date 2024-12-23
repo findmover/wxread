@@ -76,6 +76,30 @@
 
 意思为：【在每天两点时刻使用python所在位置编译器运行某个路径下的`main.py`脚本，同时将输出按每天的日期格式输出到对应日志中】可供参考）。
 
+## 代理配置说明 🌐
+
+如果你需要使用代理来确保消息推送的可靠性（特别是使用 Telegram 推送时），可以通过以下方式配置：
+
+### 本地运行时：
+在系统中设置环境变量：
+```bash
+export http_proxy=http://127.0.0.1:7890
+export https_proxy=http://127.0.0.1:7890
+```
+
+### 使用 crontab 运行时：
+在 crontab 命令前添加代理设置：
+```bash
+30 0 * * * http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 /usr/bin/python3 /path/to/your/main.py >> /path/to/logs/$(date +\%y-\%m.\%d)_sout.log 2>&1
+```
+
+### GitHub Actions 中：
+在仓库的 Secrets 中添加：
+- `http_proxy`: 你的 HTTP 代理地址
+- `https_proxy`: 你的 HTTPS 代理地址
+
+然后在 workflow 文件中使用这些环境变量。
+
 ***
 ## 字段解释 🔍
 
