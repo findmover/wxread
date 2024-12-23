@@ -20,23 +20,28 @@ class PushNotification:
         if os.getenv('http_proxy'):
             self.proxies['http'] = os.getenv('http_proxy')
 
-    def push_pushplus(self, content, token):
-        """
-        Send notification via PushPlus
-        """
+    def push_pushplus(self, content, token, retries=3, delay=3, timeout=5):
+    """
+    Send notification via PushPlus with retry mechanism and timeout
+    """
+    for attempt in range(retries):
         try:
             params = {
                 "token": token,
                 "content": content
             }
-            response = requests.get(self.pushplus_url, headers=self.headers, params=params)
+            logger.info("PushPlus通知发送尝试 #%d", attempt + 1)
+            response = requests.get(self.pushplus_url, headers=self.headers, params=params, timeout=timeout)
             response.raise_for_status()
             logger.info("PushPlus Response: %s", response.text)
             print(response.text)
             return True
-        except Exception as e:
+        except requests.exceptions.RequestException as e:
             logger.error("PushPlus通知发送失败: %s", str(e))
-            return False
+            if attempt < retries - 1:
+                time.sleep(delay)
+            else:
+                return False
 
     def push_telegram(self, content, bot_token, chat_id):
         """
