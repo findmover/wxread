@@ -63,7 +63,8 @@
 | `TELEGRAM_BOT_TOKEN`  | telegram bot token (可选)                                       | 仅在选择 `telegram` 时需要填写         |
 | `TELEGRAM_CHAT_ID`    | telegram chat id (可选)                                         | 仅在选择 `telegram` 时需要填写         |
 
-![微信截图_17309442135616](https://github.com/user-attachments/assets/69694f8a-e6be-4c3a-820a-ac79ec2a22e5)
+
+<img src="https://github.com/user-attachments/assets/69694f8a-e6be-4c3a-820a-ac79ec2a22e5" alt="微信截图_17309442135616" width="300"/>
 
 ### 3. 服务器运行（可选）
 
