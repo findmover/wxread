@@ -38,7 +38,6 @@ class PushNotification:
                 response = requests.get(self.pushplus_url, headers=self.headers, params=params, timeout=timeout)
                 response.raise_for_status()
                 logger.info("PushPlus Response: %s", response.text)
-                print(response.text)
                 return True
             except requests.exceptions.RequestException as e:
                 logger.error("PushPlus通知发送失败: %s", str(e))
