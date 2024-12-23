@@ -3,8 +3,7 @@ import os
 import requests
 import logging
 
-# logging.basicConfig(level=logging.INFO)
-# use the same logger as main.py
+
 logger = logging.getLogger(__name__)
 
 class PushNotification:
