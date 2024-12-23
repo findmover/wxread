@@ -20,10 +20,11 @@ class PushNotification:
         }
 
         # 设置代理（如果环境变量中有的话）
-        self.proxies = {
-            "https": os.getenv('https_proxy'),
-            "http": os.getenv('http_proxy')
-        }
+        self.proxies = {}
+        if os.getenv('https_proxy'):
+            self.proxies['https'] = os.getenv('https_proxy')
+        if os.getenv('http_proxy'):
+            self.proxies['http'] = os.getenv('http_proxy')
 
     def push_pushplus(self, content: str, token: str, retries: int = 3, delay: int = 3, timeout: int = 5) -> bool:
         """
