@@ -93,4 +93,4 @@ logging.info("🎉 阅读脚本已完成！")
 
 if env_method not in (None, ''):
     logging.info("⏱️ 开始推送...")
-    push("f🎉 微信读书自动阅读完成！\n⏱️ 阅读时长：{(index-1*0.5)}分钟。", env_method)
+    push(f"🎉 微信读书自动阅读完成！\n⏱️ 阅读时长：{(index-1*0.5)}分钟。", env_method)
