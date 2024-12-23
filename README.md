@@ -64,7 +64,7 @@
 | `TELEGRAM_CHAT_ID`    | telegram chat id (可选)                                         | 仅在选择 `telegram` 时需要填写         |
 
 
-<img src="https://github.com/user-attachments/assets/69694f8a-e6be-4c3a-820a-ac79ec2a22e5" alt="微信截图_17309442135616" width="300px"/>
+<img src="https://github.com/user-attachments/assets/69694f8a-e6be-4c3a-820a-ac79ec2a22e5" alt="微信截图_17309442135616" width="800px"/>
 
 ### 3. 服务器运行（可选）
 
