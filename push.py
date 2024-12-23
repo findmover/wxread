@@ -28,11 +28,11 @@ class PushNotification:
         """
         Send notification via PushPlus with retry mechanism and timeout
         """
-        for attempt in range(retries):
+        for attempt in range(1,retries+1):
             try:
                 params = {
                     "token": token,
-                    "content": content + str(attempt)
+                    "content": content + "#"+str(attempt)
                 }
                 logger.info("PushPlus通知发送尝试 #第%d次。", attempt + 1)
                 response = requests.get(self.pushplus_url, headers=self.headers, params=params, timeout=timeout)
