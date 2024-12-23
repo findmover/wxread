@@ -34,7 +34,7 @@ class PushNotification:
                     "token": token,
                     "content": content
                 }
-                logger.info("PushPlus通知发送尝试 #%d", attempt + 1)
+                logger.info("PushPlus通知发送尝试 #第%d次。", attempt + 1)
                 response = requests.get(self.pushplus_url, headers=self.headers, params=params, timeout=timeout)
                 response.raise_for_status()
                 logger.info("PushPlus Response: %s", response.text)
