@@ -3,7 +3,6 @@ import os
 import requests
 import logging
 
-
 logger = logging.getLogger(__name__)
 
 class PushNotification:
@@ -13,6 +12,13 @@ class PushNotification:
         self.headers = {
             'User-Agent': 'Apifox/1.0.0 (https://apifox.com)'
         }
+        
+        # 设置代理（如果环境变量中有的话）
+        self.proxies = {}
+        if os.getenv('https_proxy'):
+            self.proxies['https'] = os.getenv('https_proxy')
+        if os.getenv('http_proxy'):
+            self.proxies['http'] = os.getenv('http_proxy')
 
     def push_pushplus(self, content, token):
         """
@@ -42,11 +48,28 @@ class PushNotification:
                 "chat_id": chat_id,
                 "text": content
             }
-            response = requests.post(url, json=params)
+            
+            # 发送请求，包含代理设置
+            response = requests.post(
+                url, 
+                json=params,
+                proxies=self.proxies,
+                timeout=30  # 添加超时设置
+            )
             response.raise_for_status()
             logger.info("Telegram Response: %s", response.text)
-            print(response.text)
             return True
+        except requests.exceptions.ProxyError as e:
+            logger.error("Telegram代理连接失败: %s", str(e))
+            # 尝试不使用代理直接连接
+            try:
+                response = requests.post(url, json=params, timeout=30)
+                response.raise_for_status()
+                logger.info("Telegram直连成功: %s", response.text)
+                return True
+            except Exception as e2:
+                logger.error("Telegram直连也失败: %s", str(e2))
+                return False
         except Exception as e:
             logger.error("Telegram通知发送失败: %s", str(e))
             return False
