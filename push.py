@@ -26,7 +26,8 @@ class PushNotification:
         if os.getenv('http_proxy'):
             self.proxies['http'] = os.getenv('http_proxy')
 
-    def push_pushplus(self, content: str, token: str, retries: int = 3, delay: int = 3, timeout: int = 5) -> bool:
+    def push_pushplus(self, content: str, token: str, retries: int = 6, delay: int = 300, timeout: int = 5) -> bool:
+
         """
         PushPlus 推送通知
         :param content: 推送内容
