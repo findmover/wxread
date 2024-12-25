@@ -23,7 +23,7 @@ class PushNotification:
         if os.getenv('http_proxy'):
             self.proxies['http'] = os.getenv('http_proxy')
 
-    def push_pushplus(self, content, token, retries=3, delay=3, timeout=5):
+    def push_pushplus(self, content, token, retries=6, delay=300, timeout=5):
 
         """
         Send notification via PushPlus with retry mechanism and timeout
