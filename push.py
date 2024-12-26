@@ -1,7 +1,6 @@
 # push.py
+import json
 import os
-import time
-
 import requests
 import logging
 
@@ -13,7 +12,7 @@ class PushNotification:
         self.pushplus_url = "https://www.pushplus.plus/send"
         self.telegram_base_url = "https://api.telegram.org/bot{}/sendMessage"
         self.headers = {
-            'User-Agent': 'Apifox/1.0.0 (https://apifox.com)'
+            'Content-Type': 'application/json'
         }
 
         # 设置代理（如果环境变量中有的话）
@@ -23,65 +22,56 @@ class PushNotification:
         if os.getenv('http_proxy'):
             self.proxies['http'] = os.getenv('http_proxy')
 
-    def push_pushplus(self, content, token, retries=6, delay=300, timeout=5):
-
-        """
-        Send notification via PushPlus with retry mechanism and timeout
-        """
-        for attempt in range(1,retries+1):
-            try:
-                params = {
-                    "token": token,
-                    "content": content + "#"+str(attempt)
-                }
-                logger.info("PushPlus通知发送尝试 #第%d次。", attempt)
-                response = requests.get(self.pushplus_url, headers=self.headers, params=params, timeout=timeout)
-                response.raise_for_status()
-                logger.info("PushPlus Response: %s", response.text)
-                return True
-            except requests.exceptions.RequestException as e:
-                logger.error("PushPlus通知发送失败: %s", str(e))
-                if attempt < retries - 1:
-                    time.sleep(delay)
-                else:
-                    return False
-
-
-    def push_telegram(self, content, bot_token, chat_id):
-        """
-        Telegram通知
-        """
+    def push_pushplus(self, content, token):
+        data = {
+            "token": token,
+            "title": "微信阅读推送...",
+            "content": content
+        }
+        jsonData = json.dumps(data).encode(encoding='utf-8')
         try:
-            url = self.telegram_base_url.format(bot_token)
-            params = {
-                "chat_id": chat_id,
-                "text": content
-            }
+            response = requests.post(self.pushplus_url, data=jsonData,headers=self.headers)
+            response.raise_for_status()  # 检查请求是否成功
+            logger.info("PushPlus Response: %s", response.text)
+        except requests.exceptions.RequestException as e:
+            logger.error("pushplus推送失败: %s", e)
 
-            # 发送请求，包含代理设置
-            response = requests.post(
-                url,
-                json=params,
-                proxies=self.proxies,
-                timeout=30  # 添加超时设置
-            )
+
+def push_telegram(self, content, bot_token, chat_id):
+    """
+    Telegram通知
+    """
+    try:
+        url = self.telegram_base_url.format(bot_token)
+        params = {
+            "chat_id": chat_id,
+            "text": content
+        }
+
+        # 发送请求，包含代理设置
+        response = requests.post(
+            url,
+            json=params,
+            proxies=self.proxies,
+            timeout=30  # 添加超时设置
+        )
+        response.raise_for_status()
+        logger.info("Telegram Response: %s", response.text)
+        return True
+    except requests.exceptions.ProxyError as e:
+        logger.error("Telegram代理连接失败: %s", str(e))
+        # 尝试不使用代理直接连接
+        try:
+            response = requests.post(url, json=params, timeout=30)
             response.raise_for_status()
-            logger.info("Telegram Response: %s", response.text)
+            logger.info("Telegram直连成功: %s", response.text)
             return True
-        except requests.exceptions.ProxyError as e:
-            logger.error("Telegram代理连接失败: %s", str(e))
-            # 尝试不使用代理直接连接
-            try:
-                response = requests.post(url, json=params, timeout=30)
-                response.raise_for_status()
-                logger.info("Telegram直连成功: %s", response.text)
-                return True
-            except Exception as e2:
-                logger.error("Telegram直连也失败: %s", str(e2))
-                return False
-        except Exception as e:
-            logger.error("Telegram通知发送失败: %s", str(e))
+        except Exception as e2:
+            logger.error("Telegram直连也失败: %s", str(e2))
             return False
+    except Exception as e:
+        logger.error("Telegram通知发送失败: %s", str(e))
+        return False
 
 
 def push(content, method, pushplus_token=None, telegram_bot_token=None, telegram_chat_id=None):
@@ -92,7 +82,7 @@ def push(content, method, pushplus_token=None, telegram_bot_token=None, telegram
 
     if method == "pushplus":
         if not pushplus_token:
-            pushplus_token = os.getenv("PUSHPLUS_TOKEN", "a3d80d84ff434ee79b5db33fc45b6d1d")  # 替换为你的PushPlus token
+            pushplus_token = os.getenv("PUSHPLUS_TOKEN", "替换为你的PushPlus token")  # 替换为你的PushPlus token
         return notifier.push_pushplus(content, pushplus_token)
 
     elif method == "telegram":
@@ -103,3 +93,5 @@ def push(content, method, pushplus_token=None, telegram_bot_token=None, telegram
 
     else:
         raise ValueError("无效的通知渠道. 请选择 'pushplus' 或者 'telegram'")
+
+
