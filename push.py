@@ -3,6 +3,7 @@ import os
 import json
 import requests
 import logging
+from config import PUSHPLUS_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_BOT_TOKEN
 
 logger = logging.getLogger(__name__)
 
@@ -60,16 +61,18 @@ class PushNotification:
 
 
 """外部调用"""
-def push(content, method, pushplus_token=None, telegram_bot_token=None, telegram_chat_id=None):
+
+
+def push(content, method):
     """统一推送接口，支持 PushPlus 和 Telegram"""
     notifier = PushNotification()
 
     if method == "pushplus":
-        token = pushplus_token or os.getenv("PUSHPLUS_TOKEN", "Your_pushplus_token")
+        token = PUSHPLUS_TOKEN
         return notifier.push_pushplus(content, token)
     elif method == "telegram":
-        bot_token = telegram_bot_token or os.getenv("TELEGRAM_BOT_TOKEN", "YOUR_BOT_TOKEN")
-        chat_id = telegram_chat_id or os.getenv("TELEGRAM_CHAT_ID", "YOUR_CHAT_ID")
+        bot_token = TELEGRAM_BOT_TOKEN
+        chat_id = TELEGRAM_CHAT_ID
         return notifier.push_telegram(content, bot_token, chat_id)
     else:
         raise ValueError("❌ 无效的通知渠道，请选择 'pushplus' 或 'telegram'")

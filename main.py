@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import time
 import random
@@ -7,24 +8,11 @@ import hashlib
 import requests
 import urllib.parse
 from push import push
-from convert import data, convert,headers as local_headers, cookies as local_cookies
+from config import data, headers, cookies, READ_NUM, PUSH_METHOD
 
 # 配置日志格式
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)-8s - %(message)s')
-
-# github action部署用
-# 从环境变量获取 headers、cookies等值(如果不存在使用默认本地值)
-# 每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次
-env_num = os.getenv('READ_NUM')
-env_method = os.getenv('PUSH_METHOD')
-curl_str = os.getenv('CURL_BASH')
-
-number = int(env_num) if env_num not in (None, '') else 120
-headers, cookies = convert(curl_str) if curl_str not in (None, '') else (None, None)
-headers = headers if headers else local_headers
-cookies = cookies if cookies else local_cookies
-
 
 # 加密盐及其它默认值
 KEY = "3c5c8717f3daf09iop3423zafeqoi"
@@ -33,11 +21,29 @@ READ_URL = "https://weread.qq.com/web/book/read"
 RENEW_URL = "https://weread.qq.com/web/login/renewal"
 
 
+def convert(curl_command):
+    """提取headers与cookies"""
+    # 提取 headers
+    for match in re.findall(r"-H '([^:]+): ([^']+)'", curl_command):
+        headers[match[0]] = match[1]
+
+    # 提取 cookies
+    cookies = {}
+    cookie_string = headers.pop('cookie', '')
+    for cookie in cookie_string.split('; '):
+        key, value = cookie.split('=', 1)
+        cookies[key] = value
+
+    return headers, cookies
+
+
 def encode_data(data):
+    """数据编码"""
     return '&'.join(f"{k}={urllib.parse.quote(str(data[k]), safe='')}" for k in sorted(data.keys()))
 
 
 def cal_hash(input_string):
+    """计算哈希值"""
     _7032f5 = 0x15051505
     _cc1055 = _7032f5
     length = len(input_string)
@@ -52,6 +58,7 @@ def cal_hash(input_string):
 
 
 def get_wr_skey():
+    """刷新cookie密钥"""
     response = requests.post(RENEW_URL, headers=headers, cookies=cookies,
                              data=json.dumps(COOKIE_DATA, separators=(',', ':')))
     for cookie in response.headers.get('Set-Cookie', '').split(';'):
@@ -61,7 +68,7 @@ def get_wr_skey():
 
 
 index = 1
-while index <= number:
+while index <= READ_NUM:
     data['ct'] = int(time.time())
     data['ts'] = int(time.time() * 1000)
     data['rn'] = random.randint(0, 1000)
@@ -85,13 +92,13 @@ while index <= number:
             logging.info(f"✅ 密钥刷新成功，新密钥：{new_skey}")
             logging.info(f"🔄 重新本次阅读。")
         else:
-            logging.error("❌ 无法获取新密钥，终止运行。")
-            push("❌ 无法获取新密钥，终止运行。", env_method)
+            logging.error("❌ 无法获取新密钥或者配置有误，终止运行。")
+            push("❌ 无法获取新密钥或者配置有误，终止运行。", PUSH_METHOD)
             raise Exception("❌ 无法获取新密钥，终止运行。")
     data.pop('s')
 
 logging.info("🎉 阅读脚本已完成！")
 
-if env_method not in (None, ''):
+if PUSH_METHOD not in (None, ''):
     logging.info("⏱️ 开始推送...")
-    push(f"🎉 微信读书自动阅读完成！\n⏱️ 阅读时长：{(index - 1) * 0.5}分钟。", env_method)
+    push(f"🎉 微信读书自动阅读完成！\n⏱️ 阅读时长：{(index - 1) * 0.5}分钟。", PUSH_METHOD)
