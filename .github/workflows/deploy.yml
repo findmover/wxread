@@ -27,7 +27,7 @@ jobs:
     - name: Run deployment script
       env:
         WXREAD_CURL: ${{ secrets.WXREAD_CURL }}
-        READ_NUM: ${{ vars.READ_NUM }}  # 使用 Repository Variables
+        READ_NUM: ${{ secrets.READ_NUM }}
         PUSH_METHOD: ${{ secrets.PUSH_METHOD }}
         PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
