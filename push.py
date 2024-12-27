@@ -1,5 +1,7 @@
 # push.py 支持 PushPlus 和 Telegram 的消息推送模块
 import os
+import random
+import time
 import json
 import requests
 import logging
@@ -21,22 +23,28 @@ class PushNotification:
 
     def push_pushplus(self, content, token):
         """PushPlus消息推送"""
-        try:
-            response = requests.post(
-                self.pushplus_url,
-                data=json.dumps({
-                    "token": token,
-                    "title": "微信阅读推送...",
-                    "content": content
-                }).encode('utf-8'),
-                headers=self.headers
-            )
-            response.raise_for_status()
-            logger.info("✅ PushPlus响应: %s", response.text)
-            return True
-        except Exception as e:
-            logger.error("❌ PushPlus推送失败: %s", e)
-            return False
+        attempts = 5
+        for attempt in range(attempts):
+            try:
+                response = requests.post(
+                    self.pushplus_url,
+                    data=json.dumps({
+                        "token": token,
+                        "title": "微信阅读推送...",
+                        "content": content
+                    }).encode('utf-8'),
+                    headers=self.headers,
+                    timeout=30
+                )
+                response.raise_for_status()
+                logger.info("✅ PushPlus响应: %s", response.text)
+                break  # 成功推送，跳出循环
+            except requests.exceptions.RequestException as e:
+                logger.error("❌ PushPlus推送失败: %s", e)
+                if attempt < attempts - 1:  # 如果不是最后一次尝试
+                    sleep_time = random.randint(1800, 3600)  # 随机30到60分钟
+                    logger.info("将在 %d 秒后重试...", sleep_time)
+                    time.sleep(sleep_time)
 
     def push_telegram(self, content, bot_token, chat_id):
         """Telegram消息推送，失败时自动尝试直连"""
