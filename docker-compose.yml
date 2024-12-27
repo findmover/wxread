@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    environment:
+      CURL_BASH: |
+        替换为你的curl_bash
+      READ_NUM: 1
+      #推送方式(pushplus or telegarm)
+      PUSH_METHOD:
+      #pushplus
+      PUSHPLUS_TOKEN:
+      #telegarm
+      TELEGRAM_BOT_TOKEN:
+      TELEGRAM_CHAT_ID:
+
+    ports:
+      - "8765:8765"
+    command: python main.py
