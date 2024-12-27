@@ -5,11 +5,11 @@
    
 ## Attention 📢
 
-1. **签到次数调整**：只需签到完成`挑战赛`可以将`num`次数从120调整为2，每次`num`为30秒，200即100分钟。
+1. **签到次数调整**：只需签到完成挑战赛可以将`num`次数从120调整为2，每次`num`为30秒，200即100分钟。
    
 2. **解决阅读时间问题**：对于issue中提出的“阅读时间没有增加”，“增加时间与刷的时间不对等”建议保留`config.py`中的【data】字段，默认阅读三体，其它书籍自行测试。
 
-3. **GitHub Action部署/本地部署**：主要配置config.py即可，Action部署使用环境变量，本地部署修改config.py里的阅读次数、haeders、cookies即可。
+3. **GitHub Action部署/本地部署**：主要配置config.py即可，Action部署使用环境变量，本地部署修改config.py里的阅读次数、headers、cookies即可。
 
 ***
 ## 项目介绍 📚
@@ -37,7 +37,7 @@
 }
 ```
 
-右键复制为Bash格式（action部署到这里即可）；然后在 [Convert](https://curlconverter.com/python/) 转化为Python脚本，复制需要的headers与cookies字段替换到`config.py`（data字段保留），运行`main.py`即可，依赖自行安装。
+右键复制为Bash格式（Action部署到这里即可）；然后在 [Convert](https://curlconverter.com/python/) 转化为Python脚本，复制需要的headers与cookies字段替换到`config.py`（data字段保留），运行`main.py`即可，依赖自行安装。
 
 ### 2. GitHub Action部署运行（GitHub运行）
 
