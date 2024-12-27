@@ -1,7 +1,6 @@
-# push.py
-# 支持 PushPlus 和 Telegram 的消息推送模块
-import json
+# push.py 支持 PushPlus 和 Telegram 的消息推送模块
 import os
+import json
 import requests
 import logging
 

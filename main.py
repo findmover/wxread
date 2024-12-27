@@ -7,23 +7,22 @@ import hashlib
 import requests
 import urllib.parse
 from push import push
-from capture import headers as local_headers, cookies as local_cookies, data
+from convert import data, convert
 
 # 配置日志格式
-logging.basicConfig(level=logging.INFO,format='%(asctime)s - %(levelname)-8s - %(message)s',handlers=[logging.StreamHandler()])
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)-8s - %(message)s')
 
 # github action部署用
 # 从环境变量获取 headers、cookies等值(如果不存在使用默认本地值)
 # 每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次
 env_num = os.getenv('READ_NUM')
 env_method = os.getenv('PUSH_METHOD')
-env_headers = os.getenv('WXREAD_HEADERS')
-env_cookies = os.getenv('WXREAD_COOKIES')
+curl_str = os.getenv('CURL_BASH')
 
 number = int(env_num) if env_num not in (None, '') else 120
-headers = json.loads(json.dumps(eval(env_headers))) if env_headers else local_headers
-cookies = json.loads(json.dumps(eval(env_cookies))) if env_cookies else local_cookies
+headers, cookies = convert(curl_str)
+
 
 # 加密盐及其它默认值
 KEY = "3c5c8717f3daf09iop3423zafeqoi"
@@ -74,7 +73,7 @@ while index <= number:
     if 'succ' in resData:
         index += 1
         time.sleep(30)
-        logging.info(f"✅ 阅读成功，阅读进度：{(index-1) * 0.5} 分钟")
+        logging.info(f"✅ 阅读成功，阅读进度：{(index - 1) * 0.5} 分钟")
 
     else:
         logging.warning("❌ cookie 已过期，尝试刷新...")
@@ -93,4 +92,4 @@ logging.info("🎉 阅读脚本已完成！")
 
 if env_method not in (None, ''):
     logging.info("⏱️ 开始推送...")
-    push(f"🎉 微信读书自动阅读完成！\n⏱️ 阅读时长：{(index-1)*0.5}分钟。", env_method)
+    push(f"🎉 微信读书自动阅读完成！\n⏱️ 阅读时长：{(index - 1) * 0.5}分钟。", env_method)
