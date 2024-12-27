@@ -5,11 +5,11 @@
    
 ## Attention 📢
 
-1. **签到次数调整**：只需签到完成挑战赛可以将`num`次数从120调整为2，每次`num`为30秒，200即100分钟。
+1. **签到次数调整**：只需签到完成`挑战赛`可以将`num`次数从120调整为2，每次`num`为30秒，200即100分钟。
    
-2. **解决阅读时间问题**：对于issue中提出的“阅读时间没有增加”，“增加时间与刷的时间不对等”建议替换`capture.py`中的【headers】、【cookies】字段。保留【data】字段。
+2. **解决阅读时间问题**：对于issue中提出的“阅读时间没有增加”，“增加时间与刷的时间不对等”建议保留`config.py`中的【data】字段，默认阅读三体，其它书籍自行测试。
 
-3. **GitHub Action部署**：使用GitHub action部署时去掉抓包得到的`headers=`、`cookies=`，填入后面的字典格式。
+3. **GitHub Action部署/本地部署**：主要配置config.py即可，Action部署使用环境变量，本地部署修改config.py里的阅读次数、haeders、cookies即可。
 
 ***
 ## 项目介绍 📚
@@ -37,13 +37,13 @@
 }
 ```
 
-右键复制为Bash格式，然后在 [Convert](https://curlconverter.com/python/) 转化为Python脚本，复制需要的headers与cookies字段替换到`capture.py`（data字段保留），运行`main.py`即可，依赖自行安装。
+右键复制为Bash格式（action部署到这里即可）；然后在 [Convert](https://curlconverter.com/python/) 转化为Python脚本，复制需要的headers与cookies字段替换到`config.py`（data字段保留），运行`main.py`即可，依赖自行安装。
 
 ### 2. GitHub Action部署运行（GitHub运行）
 
 
 - Fork这个仓库，在仓库 **Settings** -> 左侧列表中的 **Secrets and variables** -> **Actions**，然后在右侧的 **Repository secrets** 中添加如下值：
-  - `CURL_BASH`：复制read接口转换为bath的curl。
+  - `WXREAD_CURL`：复制read接口转换为bath的数据。
   - `PUSH_METHOD`：推送方法，可以填写你想使用的推送方式（pushplus或telegram）。
   - `PUSHPLUS_TOKEN`/`TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID`: 推送key值。
   
@@ -54,7 +54,7 @@
 
 | Key                   | Value                                  | 说明                    |
 |-----------------------|----------------------------------------|-----------------------|
-| `CURL_BASH`           | 抓到的read接口的curl_bash命令 (必填)             | 必须提供有效的指令             |
+| `WXREAD_CURL`           | 抓到的read接口的curl_bash命令 (必填)             | 必须提供有效的指令             |
 | `READ_NUM`            | 阅读时长，每次代表30秒(可选)                       | 控制阅读时长，默认60分钟         |
 | `PUSH_METHOD`         | 推送方式，可选值为 `pushplus` 或 `telegram` (可选) | 选择推送方式，默认不推送          |
 | `PUSHPLUS_TOKEN`      | pushplus token (可选)                    | 仅在选择 `pushplus` 时需要填写 |
@@ -102,75 +102,20 @@ export https_proxy=http://127.0.0.1:7890
 ***
 ## 字段解释 🔍
 
-- `appId`: `"wbxxxxxxxxxxxxxxxxxxxxxxxx"` ✔️
-  - 应用的唯一标识符。
-
-- `b`: `"ce032b305a9bc1ce0b0dd2a"` ✔️
-  - 书籍或章节的唯一标识符。
-
-- `c`: `"0723244023c072b030ba601"` ✔️
-  - 内容的唯一标识符，可能是页面或具体段落。
-
-- `ci`: `60` ✔️
-  - 章节或部分的索引。
-
-- `co`: `336` ✔️
-  - 内容的具体位置或页码。
-
-- `sm`: `"[插图]威慑纪元61年，执剑人在一棵巨树"` ✔️
-  - 当前阅读的内容描述或摘要。
-
-- `pr`: `65` ✔️
-  - 页码或段落索引。
-
-- `rt`: `88` ✔️
-  - 阅读时长或阅读进度。
-
-- `ts`: `1727580815581` ✔️
-  - 时间戳，表示请求发送的具体时间（毫秒级）。
-
-- `rn`: `114`
-  - 随机数或请求编号，用于标识唯一的请求。
-
-- `sg`: `"bfdf7de2fe1673546ca079e2f02b79b937901ef789ed5ae16e7b43fb9e22e724"`
-  - 安全签名，用于验证请求的合法性和完整性。
-
-- `ct`: `1727580815` ✔️
-  - 时间戳，表示请求发送的具体时间（秒级）。
-
-- `ps`: `"xxxxxxxxxxxxxxxxxxxxxxxx"` ✔️
-  - 用户标识符或会话标识符，用于追踪用户或会话。
-
-- `pc`: `"xxxxxxxxxxxxxxxxxxxxxxxx"` ✔️
-  - 设备标识符或客户端标识符，用于标识用户的设备或客户端。
-
-- `s`: `"fadcb9de"`
-  - 校验和或哈希值，用于验证请求数据的完整性。
-
-
-***
-## 截图展示 📸
-
-#### 1. 运行结果
-
-![image-20241004115421978](pic/image-20241004115421978.png)
-
-#### 2. 接口抓取
-
-![image-20241004115513846](pic/image-20241004115513846.png)
-
-#### 3. JS逆向
-
-![image-20241004115545324](pic/image-20241004115545324.png)
-
-#### 4. 显示成效（测试近一个月全部正常运行）
-
-![352c71c4cdd2e16e84cb9239499573a1](pic/352c71c4cdd2e16e84cb9239499573a.jpg)
-
-#### 5. 服务器自动运行指令
-
-![image-20241004120026766](pic/image-20241004120026766.png)
-
-#### 6. 完成推送
-
-![5ed32774727aadb47aeb32ca21db8342](pic/5ed32774727aadb47aeb32ca21db8342.jpg)
+| 字段 | 示例值 | 解释 |
+| --- | --- | --- |
+| `appId` | `"wbxxxxxxxxxxxxxxxxxxxxxxxx"` | 应用的唯一标识符。 |
+| `b` | `"ce032b305a9bc1ce0b0dd2a"` | 书籍或章节的唯一标识符。 |
+| `c` | `"0723244023c072b030ba601"` | 内容的唯一标识符，可能是页面或具体段落。 |
+| `ci` | `60` | 章节或部分的索引。 |
+| `co` | `336` | 内容的具体位置或页码。 |
+| `sm` | `"[插图]威慑纪元61年，执剑人在一棵巨树"` | 当前阅读的内容描述或摘要。 |
+| `pr` | `65` | 页码或段落索引。 |
+| `rt` | `88` | 阅读时长或阅读进度。 |
+| `ts` | `1727580815581` | 时间戳，表示请求发送的具体时间（毫秒级）。 |
+| `rn` | `114` | 随机数或请求编号，用于标识唯一的请求。 |
+| `sg` | `"bfdf7de2fe1673546ca079e2f02b79b937901ef789ed5ae16e7b43fb9e22e724"` | 安全签名，用于验证请求的合法性和完整性。 |
+| `ct` | `1727580815` | 时间戳，表示请求发送的具体时间（秒级）。 |
+| `ps` | `"xxxxxxxxxxxxxxxxxxxxxxxx"` | 用户标识符或会话标识符，用于追踪用户或会话。 |
+| `pc` | `"xxxxxxxxxxxxxxxxxxxxxxxx"` | 设备标识符或客户端标识符，用于标识用户的设备或客户端。 |
+| `s` | `"fadcb9de"` | 校验和或哈希值，用于验证请求数据的完整性。 |
