@@ -7,14 +7,28 @@ services:
       CURL_BASH: |
         替换为你的curl_bash
       READ_NUM: 1
-      #推送方式(pushplus or telegarm)
-      PUSH_METHOD:
-      #pushplus
-      PUSHPLUS_TOKEN:
-      #telegarm
-      TELEGRAM_BOT_TOKEN:
-      TELEGRAM_CHAT_ID:
-
+      # 推送方式 (pushplus or telegram)
+      PUSH_METHOD: pushplus
+      # pushplus
+      PUSHPLUS_TOKEN: a3d80d84ff434ee79b5db33fc45b6d1d
+      # telegram
+      TELEGRAM_BOT_TOKEN: <your-telegram-bot-token>
+      TELEGRAM_CHAT_ID: <your-telegram-chat-id>
     ports:
       - "8765:8765"
     command: python main.py
+    restart: always
+
+  cron:
+    image: python:3.8-slim
+    volumes:
+      - .:/app
+    entrypoint: |
+      bash -c "
+        echo '0 1 * * * python /app/main.py >> /app/script_output.log 2>&1' > /etc/cron.d/script-cron-job &&
+        chmod 0644 /etc/cron.d/script-cron-job &&
+        crontab /etc/cron.d/script-cron-job &&
+        cron -f"
+    environment:
+      - CRON_TZ=Asia/Shanghai
+    restart: always
