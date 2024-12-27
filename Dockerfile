@@ -1,20 +1,15 @@
-# 使用官方Python镜像作为基础镜像
+# 使用官方 Python 镜像作为基础镜像
 FROM python:3.9-slim
 
 # 设置工作目录
 WORKDIR /app
 
-# 复制requirements.txt并安装依赖
-COPY requirements.txt .
+# 复制 requirements.txt 并安装依赖
+COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# 复制所有Python文件到容器中
-COPY main.py .
-COPY convert.py .
-COPY push.py .
+# 复制项目文件到工作目录
+COPY . /app/
 
-# 设置环境变量
-ENV CURL_BASH=${CURL_BASH}
-
-# 设置入口点为main.py
+# 设置启动命令
 CMD ["python", "main.py"]
