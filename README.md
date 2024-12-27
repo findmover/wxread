@@ -43,8 +43,7 @@
 
 
 - Fork这个仓库，在仓库 **Settings** -> 左侧列表中的 **Secrets and variables** -> **Actions**，然后在右侧的 **Repository secrets** 中添加如下值：
-  - `WXREAD_HEADERS`：你的 headers 字典（去掉抓包得到的 `headers=`，填写后面内容）。
-  - `WXREAD_COOKIES`：你的 cookies 字典（去掉抓包得到的 `cookies=`，填写后面内容）。
+  - `CURL_BASH`：复制read接口转换为bath的curl。
   - `PUSH_METHOD`：推送方法，可以填写你想使用的推送方式（pushplus或telegram）。
   - `PUSHPLUS_TOKEN`/`TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID`: 推送key值。
   
@@ -53,13 +52,13 @@
 
 - 释义如下：
 
-| Key                   | Value                                  | 说明                                      |
-|-----------------------|----------------------------------------|-------------------------------------------|
-| `CURL_BASH`           | 抓到的read接口的curl_bash命令 (必填)             | 必须提供有效的请求头                     |
-| `READ_NUM`            | 阅读时长，每次代表30秒(可选)                       | 控制阅读时长，默认60分钟                     |
-| `PUSH_METHOD`         | 推送方式，可选值为 `pushplus` 或 `telegram` (可选) | 选择推送方式，默认不推送                             |
-| `PUSHPLUS_TOKEN`      | pushplus token (可选)                    | 仅在选择 `pushplus` 时需要填写          |
-| `TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID` | telegram bot token&telegram chat id (可选)               | 仅在选择 `telegram` 时需要填写         |
+| Key                   | Value                                  | 说明                    |
+|-----------------------|----------------------------------------|-----------------------|
+| `CURL_BASH`           | 抓到的read接口的curl_bash命令 (必填)             | 必须提供有效的指令             |
+| `READ_NUM`            | 阅读时长，每次代表30秒(可选)                       | 控制阅读时长，默认60分钟         |
+| `PUSH_METHOD`         | 推送方式，可选值为 `pushplus` 或 `telegram` (可选) | 选择推送方式，默认不推送          |
+| `PUSHPLUS_TOKEN`      | pushplus token (可选)                    | 仅在选择 `pushplus` 时需要填写 |
+| `TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID` | telegram bot token&telegram chat id (可选)               | 仅在选择 `telegram` 时需要填写 |
 
 
 <img src="https://github.com/user-attachments/assets/69694f8a-e6be-4c3a-820a-ac79ec2a22e5" alt="微信截图_17309442135616" width="800px"/>

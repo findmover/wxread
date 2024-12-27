@@ -7,7 +7,7 @@ import hashlib
 import requests
 import urllib.parse
 from push import push
-from convert import data, convert
+from convert import data, convert,headers as local_headers, cookies as local_cookies
 
 # 配置日志格式
 logger = logging.getLogger(__name__)
@@ -21,7 +21,9 @@ env_method = os.getenv('PUSH_METHOD')
 curl_str = os.getenv('CURL_BASH')
 
 number = int(env_num) if env_num not in (None, '') else 120
-headers, cookies = convert(curl_str)
+headers, cookies = convert(curl_str) if curl_str not in (None, '') else (None, None)
+headers = headers if headers else local_headers
+cookies = cookies if cookies else local_cookies
 
 
 # 加密盐及其它默认值
