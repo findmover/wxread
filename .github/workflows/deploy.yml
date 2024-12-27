@@ -22,12 +22,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install certifi==2024.8.30 charset-normalizer==3.4.0 idna==3.10 requests==2.32.3 urllib3==2.2.3
 
     - name: Run deployment script
       env:
-        WXREAD_HEADERS: ${{ secrets.WXREAD_HEADERS }}
-        WXREAD_COOKIES: ${{ secrets.WXREAD_COOKIES }}
+        WXREAD_CURL: ${{ secrets.WXREAD_CURL }}
         READ_NUM: ${{ vars.READ_NUM }}  # 使用 Repository Variables
         PUSH_METHOD: ${{ secrets.PUSH_METHOD }}
         PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}

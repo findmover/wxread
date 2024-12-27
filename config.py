@@ -8,7 +8,7 @@ github action部署或本地部署
 每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次
 """
 
-# 阅读次数
+# 阅读次数 默认120次/60分钟
 READ_NUM = int(os.getenv('READ_NUM', '120'))
 # pushplus or telegram
 PUSH_METHOD = "" or os.getenv('PUSH_METHOD')
