@@ -1,4 +1,4 @@
-# config.py 从curl命令提取cookies和headers
+# config.py 自定义配置
 import os
 import re
 
