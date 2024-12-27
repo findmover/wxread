@@ -18,7 +18,7 @@ PUSHPLUS_TOKEN = "" or os.getenv("PUSHPLUS_TOKEN")
 TELEGRAM_BOT_TOKEN = "" or os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = "" or os.getenv("TELEGRAM_CHAT_ID")
 # 复制的curl_bath命令
-curl_str = os.getenv('CURL_BASH')
+curl_str = os.getenv('WXREAD_CURL')
 
 # 对应替换
 headers = {
