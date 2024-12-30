@@ -34,7 +34,7 @@ class PushNotification:
                         "content": content
                     }).encode('utf-8'),
                     headers=self.headers,
-                    timeout=30
+                    timeout=10
                 )
                 response.raise_for_status()
                 logger.info("✅ PushPlus响应: %s", response.text)
@@ -42,7 +42,7 @@ class PushNotification:
             except requests.exceptions.RequestException as e:
                 logger.error("❌ PushPlus推送失败: %s", e)
                 if attempt < attempts - 1:  # 如果不是最后一次尝试
-                    sleep_time = random.randint(1800, 3600)  # 随机30到60分钟
+                    sleep_time = random.randint(180, 360)  # 随机3到6分钟
                     logger.info("将在 %d 秒后重试...", sleep_time)
                     time.sleep(sleep_time)
 
