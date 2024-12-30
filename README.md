@@ -120,4 +120,4 @@ export https_proxy=http://127.0.0.1:7890
 | `pc` | `"xxxxxxxxxxxxxxxxxxxxxxxx"` | 设备标识符或客户端标识符，用于标识用户的设备或客户端。 |
 | `s` | `"fadcb9de"` | 校验和或哈希值，用于验证请求数据的完整性。 |
 
-[![123](https://i.ytimg.com/vi/FGO5VfkK3pI/hqdefault.jpg)](https://www.youtube.com/watch?v=FGO5VfkK3pI "123")
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/FGO5VfkK3pI/0.jpg)](https://www.youtube.com/watch?v=FGO5VfkK3pI)
