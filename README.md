@@ -2,7 +2,7 @@
 `AFF`*【科学上网】机场地址--->[R星云](https://web.rstar.cloud/)<---机场地址【科学上网】*`AFF` <br>
 *觉得这个项目对你有帮助恰巧你需要节点的话可以看一下*
 
-   
+
 ## Attention 📢
 
 1. **签到次数调整**：只需签到完成挑战赛可以将`num`次数从120调整为2，每次`num`为30秒，200即100分钟。
@@ -11,6 +11,7 @@
 
 3. **GitHub Action部署/本地部署**：主要配置config.py即可，Action部署使用环境变量，本地部署修改config.py里的阅读次数、headers、cookies即可。
 
+4. **推送问题**：猜测是GitHub action环境问题，或者pushplus对github的ip限时墙导致偶尔推送出问题。现增加wxpusher的极简推送方式。
 ***
 ## 项目介绍 📚
 
@@ -44,24 +45,38 @@
 
 - Fork这个仓库，在仓库 **Settings** -> 左侧列表中的 **Secrets and variables** -> **Actions**，然后在右侧的 **Repository secrets** 中添加如下值：
   - `WXREAD_CURL_BASH`：复制read接口转换为bath的数据。
-  - `PUSH_METHOD`：推送方法，可以填写你想使用的推送方式（pushplus或telegram）。
-  - `PUSHPLUS_TOKEN`/`TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID`: 推送key值。
+  - `PUSH_METHOD`：推送方法，可以填写你想使用的推送方式（pushplus、wxpusher、telegram）。
+  - `PUSHPLUS_TOKEN`/`wxpusher`/`TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID`: 推送key值。
   
 - 在 **Variables** 部分，最下方添加变量：
   - `READ_NUM`：设定每次阅读的目标次数。
 
-- 释义如下：
+对应文档
+pushplus:https://pushplus.apifox.cn/api-107787114
+wxpusher:https://wxpusher.zjiecode.com/docs/#/?id=spt
 
-| Key                   | Value                                  | 说明                    |
-|-----------------------|----------------------------------------|-----------------------|
-| `WXREAD_CURL_BASH`           | 抓到的read接口的curl_bash命令 (必填)             | 必须提供有效的指令             |
-| `READ_NUM`            | 阅读时长，每次代表30秒(可选)                       | 控制阅读时长，默认60分钟         |
-| `PUSH_METHOD`         | 推送方式，可选值为 `pushplus` 或 `telegram` (可选) | 选择推送方式，默认不推送          |
-| `PUSHPLUS_TOKEN`      | pushplus token (可选)                    | 仅在选择 `pushplus` 时需要填写 |
-| `TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID` | telegram bot token&telegram chat id (可选)               | 仅在选择 `telegram` 时需要填写 |
+- 基本属性
+
+|      secrets       |                       Value                       |            说明            |
+|:------------------:|:-------------------------------------------------:|:--------------------------:|
+| `WXREAD_CURL_BASH` |          抓到的 read 接口的 curl_bash 命令 (必填)           |      必须提供有效的指令    |
+|     `READ_NUM`     |                阅读次数，每次代表 30 秒 (可选)                |    控制阅读时长，默认 60 分钟 |
+|   `PUSH_METHOD`    | 推送方式，可选值为 `pushplus`、`wxpusher` 或 `telegram` (可选) |    选择推送方式，默认不推送  |
+
+- 推送方式
+
+|         item         |                                     varables                                      |                      说明                      |
+|:--------------------:|:---------------------------------------------------------------------------------:|:--------------------------------------------:|
+| **当选择 `pushplus` 时** |                                 `PUSHPLUS_TOKEN`                                  |      https://www.pushplus.plus/uc.html       |
+| **当选择 `wxpusher` 时** |                                  `WXPUSHER_SPT`                                   | https://wxpusher.zjiecode.com/docs/#/?id=spt |
+| **当选择 `telegram` 时** | 配置项：`TELEGRAM_BOT_TOKEN` & `TELEGRAM_CHAT_ID` <br>代理可选：`http_proxy`&`https_proxy` |                   telagram                   |
 
 
-<img src="https://github.com/user-attachments/assets/69694f8a-e6be-4c3a-820a-ac79ec2a22e5" alt="微信截图_17309442135616" width="800px"/>
+
+
+
+
+<img src="https://github.com/user-attachments/assets/69694f8a-e6be-4c3a-820a-ac79ec2a22e5" alt="微信截图_17309442135616" width="600px"/>
 
 ### 3. 服务器运行（可选）
 
@@ -75,29 +90,11 @@
 
 
 ***
-## 代理配置说明 🌐
 
-如果你需要使用代理来确保消息推送的可靠性（特别是使用 Telegram 推送时），可以通过以下方式配置：
-
-### 本地运行时：
-在系统中设置环境变量：
-```bash
-export http_proxy=http://127.0.0.1:7890
-export https_proxy=http://127.0.0.1:7890
-```
-
-### 使用 crontab 运行时：
-在 crontab 命令前添加代理设置：
-```bash
-30 0 * * * http_proxy=http://127.0.0.1:7890 https_proxy=http://127.0.0.1:7890 /usr/bin/python3 /path/to/your/main.py >> /path/to/logs/$(date +\%y-\%m.\%d)_sout.log 2>&1
-```
-
-### GitHub Actions 中：
-在仓库的 Secrets 中添加：
-- `http_proxy`: 你的 HTTP 代理地址
-- `https_proxy`: 你的 HTTPS 代理地址
-
-然后在 workflow 文件中使用这些环境变量。
+## 视频教程
+<a href="https://www.bilibili.com/video/BV1kJ6gY3En3/" target="_blank">
+  <img src="https://pic1.imgdb.cn/item/67723c80d0e0a243d4ec75e2.png" alt="Watch the video" style="width:800px;">
+</a>
 
 ***
 ## 字段解释 🔍
@@ -120,7 +117,5 @@ export https_proxy=http://127.0.0.1:7890
 | `pc` | `"xxxxxxxxxxxxxxxxxxxxxxxx"` | 设备标识符或客户端标识符，用于标识用户的设备或客户端。 |
 | `s` | `"fadcb9de"` | 校验和或哈希值，用于验证请求数据的完整性。 |
 
-<a href="https://www.bilibili.com/video/BV1kJ6gY3En3/" target="_blank">
-  <img src="https://pic1.imgdb.cn/item/67723c80d0e0a243d4ec75e2.png" alt="Watch the video" style="width:600px;">
-</a>
+
 
