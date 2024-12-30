@@ -3,16 +3,7 @@
 *觉得这个项目对你有帮助恰巧你需要节点的话可以看一下*
 
 
-## Attention 📢
 
-1. **签到次数调整**：只需签到完成挑战赛可以将`num`次数从120调整为2，每次`num`为30秒，200即100分钟。
-   
-2. **解决阅读时间问题**：对于issue中提出的“阅读时间没有增加”，“增加时间与刷的时间不对等”建议保留`config.py`中的【data】字段，默认阅读三体，其它书籍自行测试。
-
-3. **GitHub Action部署/本地部署**：主要配置config.py即可，Action部署使用环境变量，本地部署修改config.py里的阅读次数、headers、cookies即可。
-
-4. **推送问题**：猜测是GitHub action环境问题，或者pushplus对github的ip限时墙导致偶尔推送出问题。现增加wxpusher的极简推送方式。
-***
 ## 项目介绍 📚
 
 开发这个脚本的主要目的是为了在微信读书的阅读挑战赛中刷时长和保持天数。由于本人偶尔看书时未能及时签到，导致入场费打了水漂。网上找了一些，发现高赞的自动阅读需要挂虚拟器模拟或者用ADB模拟，实现一点也不优雅。因此，我决定编写一个自动化脚本。通过对官网接口的抓包和JS逆向分析实现。
@@ -46,14 +37,11 @@
 - Fork这个仓库，在仓库 **Settings** -> 左侧列表中的 **Secrets and variables** -> **Actions**，然后在右侧的 **Repository secrets** 中添加如下值：
   - `WXREAD_CURL_BASH`：复制read接口转换为bath的数据。
   - `PUSH_METHOD`：推送方法，可以填写你想使用的推送方式（pushplus、wxpusher、telegram）。
-  - `PUSHPLUS_TOKEN`/`wxpusher`/`TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID`: 推送key值。
+  - `PUSHPLUS_TOKEN`/`WXPUSHER_SPT`/`TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID`: 推送key值。
   
 - 在 **Variables** 部分，最下方添加变量：
   - `READ_NUM`：设定每次阅读的目标次数。
 
-对应文档
-pushplus:https://pushplus.apifox.cn/api-107787114
-wxpusher:https://wxpusher.zjiecode.com/docs/#/?id=spt
 
 - 基本属性
 
@@ -76,7 +64,7 @@ wxpusher:https://wxpusher.zjiecode.com/docs/#/?id=spt
 
 
 
-<img src="https://github.com/user-attachments/assets/69694f8a-e6be-4c3a-820a-ac79ec2a22e5" alt="微信截图_17309442135616" width="600px"/>
+<img src="https://github.com/user-attachments/assets/69694f8a-e6be-4c3a-820a-ac79ec2a22e5" alt="微信截图_17309442135616" width="700px"/>
 
 ### 3. 服务器运行（可选）
 
@@ -92,9 +80,24 @@ wxpusher:https://wxpusher.zjiecode.com/docs/#/?id=spt
 ***
 
 ## 视频教程
-<a href="https://www.bilibili.com/video/BV1kJ6gY3En3/" target="_blank">
-  <img src="https://pic1.imgdb.cn/item/67723c80d0e0a243d4ec75e2.png" alt="Watch the video" style="width:800px;">
-</a>
+<div style="text-align: center;">
+  <a href="https://www.bilibili.com/video/BV1kJ6gY3En3/" target="_blank">
+    <img src="https://pic1.imgdb.cn/item/67726c5ed0e0a243d4eca4f6.png" alt="Watch the video" style="width:900px;">
+  </a>
+</div>
+
+
+***
+## Attention 📢
+
+1. **签到次数调整**：只需签到完成挑战赛可以将`num`次数从120调整为2，每次`num`为30秒，200即100分钟。
+   
+2. **解决阅读时间问题**：对于issue中提出的“阅读时间没有增加”，“增加时间与刷的时间不对等”建议保留`config.py`中的【data】字段，默认阅读三体，其它书籍自行测试。
+
+3. **GitHub Action部署/本地部署**：主要配置config.py即可，Action部署使用环境变量，本地部署修改config.py里的阅读次数、headers、cookies即可。
+
+4. **推送问题**：猜测是GitHub action环境问题，或者pushplus对github的ip限时墙导致偶尔推送出问题。现增加wxpusher的极简推送方式。
+
 
 ***
 ## 字段解释 🔍
