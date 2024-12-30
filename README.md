@@ -120,4 +120,4 @@ export https_proxy=http://127.0.0.1:7890
 | `pc` | `"xxxxxxxxxxxxxxxxxxxxxxxx"` | 设备标识符或客户端标识符，用于标识用户的设备或客户端。 |
 | `s` | `"fadcb9de"` | 校验和或哈希值，用于验证请求数据的完整性。 |
 
-[![微信读书脚本使用指北](https://img.youtube.com/vi/FGO5VfkK3pI/0.jpg)](https://www.youtube.com/watch?v=FGO5VfkK3pI)
+<iframe src="//player.bilibili.com/player.html?bvid=BV1kJ6gY3En3" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="100%" height="500px"> </iframe>
