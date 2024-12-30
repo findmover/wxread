@@ -10,13 +10,15 @@ github action部署或本地部署
 
 # 阅读次数 默认120次/60分钟
 READ_NUM = int(os.getenv('READ_NUM', '120'))
-# pushplus or telegram
+# pushplus、wxpusher、telegram
 PUSH_METHOD = "" or os.getenv('PUSH_METHOD')
-# push-plus
+# pushplus
 PUSHPLUS_TOKEN = "" or os.getenv("PUSHPLUS_TOKEN")
 # telegram
 TELEGRAM_BOT_TOKEN = "" or os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = "" or os.getenv("TELEGRAM_CHAT_ID")
+# wxpusher
+WXPUSHER_SPT = "SPT_6tIS3e5EJWpWb4qa44jtOqcac4d9" or os.getenv("WXPUSHER_SPT")
 # 复制的curl_bath命令
 curl_str = os.getenv('WXREAD_CURL')
 
