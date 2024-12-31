@@ -32,7 +32,7 @@ jobs:
 
     - name: Run deployment script
       env:
-        WXREAD_CURL: ${{ secrets.WXREAD_CURL_BASH }}
+        WXREAD_CURL_BASH: ${{ secrets.WXREAD_CURL_BASH }}
         PUSH_METHOD: ${{ secrets.PUSH_METHOD }}
         PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
         WXPUSHER_SPT: ${{ secrets.WXPUSHER_SPT }}
