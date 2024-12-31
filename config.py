@@ -18,7 +18,7 @@ PUSHPLUS_TOKEN = "" or os.getenv("PUSHPLUS_TOKEN")
 TELEGRAM_BOT_TOKEN = "" or os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = "" or os.getenv("TELEGRAM_CHAT_ID")
 # wxpusher
-WXPUSHER_SPT = "SPT_6tIS3e5EJWpWb4qa44jtOqcac4d9" or os.getenv("WXPUSHER_SPT")
+WXPUSHER_SPT = "" or os.getenv("WXPUSHER_SPT")
 # 复制的curl_bath命令
 curl_str = os.getenv('WXREAD_CURL')
 
