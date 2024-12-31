@@ -30,7 +30,10 @@ RUN chmod 0644 /etc/cron.d/wxread-cron
 RUN crontab /etc/cron.d/wxread-cron
 
 # 创建启动脚本
-RUN echo '#!/bin/sh\nservice cron start\ntail -f /app/logs/$(date +\%Y-\%m-\%d).log' > /app/start.sh
+RUN echo '#!/bin/sh\n\
+touch /app/logs/$(date +\%Y-\%m-\%d).log\n\
+service cron start\n\
+tail -f /app/logs/$(date +\%Y-\%m-\%d).log' > /app/start.sh
 RUN chmod +x /app/start.sh
 
 # 启动命令
