@@ -1,26 +1,37 @@
-# 使用官方的 Python 基础镜像
 FROM python:3.10-slim
 
 # 设置工作目录
 WORKDIR /app
 
-# 复制当前目录内容到容器中的 /app 目录
-COPY . /app
+# 设置时区为中国时区
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# 安装运行所需的依赖
-RUN pip install certifi==2024.8.30 charset-normalizer==3.4.0 idna==3.10 requests==2.32.3 urllib3==2.2.3
+# 安装 cron
+RUN apt-get update && apt-get install -y cron && rm -rf /var/lib/apt/lists/*
 
-# 创建 logs 目录
+# 复制项目文件
+COPY . .
+
+# 创建日志目录
 RUN mkdir -p /app/logs
 
-# 添加定时任务
-RUN echo "0 1 * * * /usr/local/bin/python /app/main.py >> /app/logs/$(date +\%Y-\%m-\%d).log 2>&1" > /etc/cron.d/mycron
+# 安装 Python 依赖
+RUN pip install --no-cache-dir \
+    certifi==2024.8.30 \
+    charset-normalizer==3.4.0 \
+    idna==3.10 \
+    requests==2.32.3 \
+    urllib3==2.2.3
 
-# 给定时任务文件添加可执行权限
-RUN chmod 0644 /etc/cron.d/mycron
+# 创建 cron 任务
+RUN echo "0 1 * * * cd /app && python main.py >> /app/logs/\$(date +\%Y-\%m-\%d).log 2>&1" > /etc/cron.d/wxread-cron
+RUN chmod 0644 /etc/cron.d/wxread-cron
+RUN crontab /etc/cron.d/wxread-cron
 
-# 应用定时任务
-RUN crontab /etc/cron.d/mycron
+# 创建启动脚本
+RUN echo '#!/bin/sh\nservice cron start\ntail -f /app/logs/$(date +\%Y-\%m-\%d).log' > /app/start.sh
+RUN chmod +x /app/start.sh
 
-# 启动 cron 服务并在前台运行
-CMD ["cron", "-f"]
+# 启动命令
+CMD ["/app/start.sh"]
