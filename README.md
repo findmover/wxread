@@ -55,8 +55,8 @@
 
 |         item         |                                     varables                                      |                      说明                      |
 |:--------------------:|:---------------------------------------------------------------------------------:|:--------------------------------------------:|
-| **当选择 `pushplus` 时** |                                 `PUSHPLUS_TOKEN`                                  |      https://www.pushplus.plus/uc.html       |
-| **当选择 `wxpusher` 时** |                                  `WXPUSHER_SPT`                                   | https://wxpusher.zjiecode.com/docs/#/?id=spt |
+| **当选择 `pushplus` 时** |                                 `PUSHPLUS_TOKEN`                                  |      [token获取页](https://www.pushplus.plus/uc.html)       |
+| **当选择 `wxpusher` 时** |                                  `WXPUSHER_SPT`                                   | [SPT获取页](https://wxpusher.zjiecode.com/docs/#/?id=%e8%8e%b7%e5%8f%96spt) |
 | **当选择 `telegram` 时** | 配置项：`TELEGRAM_BOT_TOKEN` & `TELEGRAM_CHAT_ID` <br>代理可选：`http_proxy`&`https_proxy` |                   telagram                   |
 
 
