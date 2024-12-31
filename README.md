@@ -6,7 +6,7 @@
 
 ## 项目介绍 📚
 
-开发这个脚本的主要目的是为了在微信读书的阅读挑战赛中刷时长和保持天数。由于本人偶尔看书时未能及时签到，导致入场费打了水漂。网上找了一些，发现高赞的自动阅读需要挂虚拟器模拟或者用ADB模拟，实现一点也不优雅。因此，我决定编写一个自动化脚本。通过对官网接口的抓包和JS逆向分析实现。
+这个脚本主要是为了在微信读书的阅读**挑战赛中刷时长**和**保持天数**。由于本人偶尔看书时未能及时签到，导致入场费打了水漂。网上找了一些，发现高赞的自动阅读需要挂虚拟器模拟或者用ADB模拟，实现一点也不优雅。因此，我决定编写一个自动化脚本。通过对官网接口的抓包和JS逆向分析实现。
 
 该脚本具备以下功能：
 
@@ -35,9 +35,9 @@
 
 
 - Fork这个仓库，在仓库 **Settings** -> 左侧列表中的 **Secrets and variables** -> **Actions**，然后在右侧的 **Repository secrets** 中添加如下值：
-  - `WXREAD_CURL_BASH`：复制read接口转换为bath的数据。
+  - `WXREAD_CURL_BASH`：复制read接口转换为bash的数据。
   - `PUSH_METHOD`：推送方法，可以填写你想使用的推送方式（pushplus、wxpusher、telegram）。
-  - `PUSHPLUS_TOKEN`/`WXPUSHER_SPT`/`TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID`: 推送key值。
+  - `PUSHPLUS_TOKEN` or `WXPUSHER_SPT` or `TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID`: 推送key值。
   
 - 在 **Variables** 部分，最下方添加变量：
   - `READ_NUM`：设定每次阅读的目标次数。
