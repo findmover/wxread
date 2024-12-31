@@ -1,26 +1,25 @@
-# config.py 自定义配置
+# config.py 自定义配置,包括阅读次数、推送token的填写
 import os
 import re
 
 """
-github action部署或本地部署
-从环境变量获取值,如果不存在使用默认本地值
-每一次代表30秒，比如你想刷1个小时这里填120，你只需要签到这里填2次
+可修改区域
+默认使用本地值如果不存在从环境变量中获取值
 """
 
 # 阅读次数 默认120次/60分钟
-READ_NUM = int(os.getenv('READ_NUM', '120'))
-# pushplus、wxpusher、telegram
+READ_NUM = int(os.getenv('READ_NUM') or 120)
+# 需要推送时可选，可选pushplus、wxpusher、telegram
 PUSH_METHOD = "" or os.getenv('PUSH_METHOD')
-# pushplus
+# pushplus推送时需填
 PUSHPLUS_TOKEN = "" or os.getenv("PUSHPLUS_TOKEN")
-# telegram
+# telegram推送时需填
 TELEGRAM_BOT_TOKEN = "" or os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = "" or os.getenv("TELEGRAM_CHAT_ID")
-# wxpusher
+# wxpusher推送时需填
 WXPUSHER_SPT = "" or os.getenv("WXPUSHER_SPT")
-# 复制的curl_bath命令
-curl_str = os.getenv('WXREAD_CURL')
+# read接口的bash命令，本地部署时可对应替换headers、cookies
+curl_str = os.getenv('WXREAD_CURL_BASH')
 
 # 对应替换
 headers = {
@@ -43,8 +42,6 @@ headers = {
     "sentry-trace": "d3cc3a94f5244647b8064ecd77eb8ba6-93b39e13fa4e5fd6",
     "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0"
 }
-#
-# #对应替换
 cookies = {
     "RK": "oxEY1bTnXf",
     "ptcz": "53e3b35a9486dd63c4d06430b05aa169402117fc407dc5cc9329b41e59f62e2b",
@@ -69,7 +66,9 @@ cookies = {
     "wr_skey": "ivnZkd2_"
 }
 
-# 保留| 默认读三体，其它书籍自行测试时间是否增加
+"""
+建议保留区域|默认读三体，其它书籍自行测试时间是否增加
+"""
 data = {
     "appId": "wb182564874663h152492176",
     "b": "ce032b305a9bc1ce0b0dd2a",
@@ -89,7 +88,7 @@ data = {
 
 
 def convert(curl_command):
-    """提取headers与cookies"""
+    """提取bash接口中的headers与cookies"""
     # 提取 headers
     for match in re.findall(r"-H '([^:]+): ([^']+)'", curl_command):
         headers[match[0]] = match[1]
