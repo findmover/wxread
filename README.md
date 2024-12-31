@@ -75,7 +75,8 @@
 
 steps1：克隆这个项目：`git clone https://github.com/findmover/wxread.git`<br>
 steps2：配置config.py里的headers、cookies、READ_NUM、PUSH_METHOD以及对应推送方式token<br>
-steps3：进入目录使用镜像构建容器：`docker rm -f wxread && docker build -t wxread . && docker run -d --name wxread -v $(pwd)/logs:/app/logs --restart always wxread`<br>
+steps3：进入目录使用镜像构建容器：
+`docker rm -f wxread && docker build -t wxread . && docker run -d --name wxread -v $(pwd)/logs:/app/logs --restart always wxread`<br>
 steps4：测试：`docker exec -it wxread python /app/main.py`
 
 ***
