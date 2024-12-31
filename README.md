@@ -27,9 +27,7 @@
   "succ": 1,
   "synckey": 564589834
 }
-```
-
-右键复制为Bash格式（方法一部署到这里即可）；
+```右键复制为Bash格式。
 
 ### 方法一： GitHub Action部署运行（GitHub运行）
 
