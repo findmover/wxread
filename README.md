@@ -73,12 +73,10 @@
 - 在你的服务器上有Python运行环境即可，使用`cron`定义自动运行。
 - 或者通过docker运行，将抓到的bash命令在 [Convert](https://curlconverter.com/python/) 转化为Python字典格式，复制需要的headers与cookies即可（data不需要）。
 
-```
-steps1：克隆这个项目：git clone https://github.com/findmover/wxread.git
+steps1：克隆这个项目：`git clone https://github.com/findmover/wxread.git`
 steps2：配置config.py里的headers、cookies、READ_NUM、PUSH_METHOD以及对应推送方式token
-steps3：进入目录使用镜像构建容器：docker rm -f wxread && docker build -t wxread . && docker run -d --name wxread -v $(pwd)/logs:/app/logs --restart always wxread
-steps4：测试：docker exec -it wxread python /app/main.py
-```
+steps3：进入目录使用镜像构建容器：`docker rm -f wxread && docker build -t wxread . && docker run -d --name wxread -v $(pwd)/logs:/app/logs --restart always wxread`
+steps4：测试：`docker exec -it wxread python /app/main.py`
 
 ***
 ## Attention 📢
