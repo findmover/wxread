@@ -21,22 +21,6 @@ READ_URL = "https://weread.qq.com/web/book/read"
 RENEW_URL = "https://weread.qq.com/web/login/renewal"
 
 
-def convert(curl_command):
-    """提取headers与cookies"""
-    # 提取 headers
-    for match in re.findall(r"-H '([^:]+): ([^']+)'", curl_command):
-        headers[match[0]] = match[1]
-
-    # 提取 cookies
-    cookies = {}
-    cookie_string = headers.pop('cookie', '')
-    for cookie in cookie_string.split('; '):
-        key, value = cookie.split('=', 1)
-        cookies[key] = value
-
-    return headers, cookies
-
-
 def encode_data(data):
     """数据编码"""
     return '&'.join(f"{k}={urllib.parse.quote(str(data[k]), safe='')}" for k in sorted(data.keys()))
