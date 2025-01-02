@@ -76,9 +76,10 @@ while index <= READ_NUM:
             logging.info(f"✅ 密钥刷新成功，新密钥：{new_skey}")
             logging.info(f"🔄 重新本次阅读。")
         else:
-            logging.error("❌ 无法获取新密钥或者配置有误，终止运行。")
-            push("❌ 无法获取新密钥或者配置有误，终止运行。", PUSH_METHOD)
-            raise Exception("❌ 无法获取新密钥，终止运行。")
+            ERROR_CODE = "❌ 无法获取新密钥或者WXREAD_CURL_BASH配置有误，终止运行。"
+            logging.error(ERROR_CODE)
+            push(ERROR_CODE, PUSH_METHOD)
+            raise Exception(ERROR_CODE)
     data.pop('s')
 
 logging.info("🎉 阅读脚本已完成！")
