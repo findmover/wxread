@@ -60,14 +60,7 @@
 
 ### 视频教程
 
-<div style="text-align: center;">
-  <a href="https://www.bilibili.com/video/BV1kJ6gY3En3/" target="_blank">
-    <img src="https://pic1.imgdb.cn/item/67726c5ed0e0a243d4eca4f6.png" alt="Watch the video" style="width:900px;">
-  </a>
-</div>
-![67726c5ed0e0a243d4eca4f6](https://github.com/user-attachments/assets/ec144869-3dbb-40fe-9bc5-f8bf1b5fce3c)
-
-
+[![视频教程](https://github.com/user-attachments/assets/ec144869-3dbb-40fe-9bc5-f8bf1b5fce3c)](https://www.bilibili.com/video/BV1kJ6gY3En3/ "点击查看视频")
 
 
 ### 方法二： 服务器运行（docker部署）
