@@ -25,7 +25,7 @@ RUN pip install --no-cache-dir \
     urllib3==2.2.3
 
 # 创建 cron 任务
-RUN echo "0 1 * * * cd /app && python main.py >> /app/logs/\$(date +\%Y-\%m-\%d).log 2>&1" > /etc/cron.d/wxread-cron
+RUN echo "0 1 * * * cd /app && python3 main.py >> /app/logs/\$(date +\%Y-\%m-\%d).log 2>&1" > /etc/cron.d/wxread-cron
 RUN chmod 0644 /etc/cron.d/wxread-cron
 RUN crontab /etc/cron.d/wxread-cron
 
