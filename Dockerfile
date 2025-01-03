@@ -28,4 +28,4 @@ RUN chmod 0644 /etc/cron.d/wxread-cron
 RUN crontab /etc/cron.d/wxread-cron
 
 # 启动命令
-CMD service cron start && tail -f /dev/null
+CMD ["sh", "-c", "service cron start && tail -f /dev/null"]
