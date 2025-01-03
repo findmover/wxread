@@ -56,7 +56,7 @@
 | :----------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | **当选择 `pushplus` 时** |                       `PUSHPLUS_TOKEN`                       |       [Token获取页](https://www.pushplus.plus/uc.html)       |
 | **当选择 `wxpusher` 时** |                        `WXPUSHER_SPT`                        | [SPT获取页](https://wxpusher.zjiecode.com/docs/#/?id=%e8%8e%b7%e5%8f%96spt) |
-| **当选择 `telegram` 时** | 配置项：`TELEGRAM_BOT_TOKEN` & `TELEGRAM_CHAT_ID` <br>代理可选：`http_proxy`&`https_proxy` |                           [Telagram](https://www.nodeseek.com/post-22475-1)配置                           |
+| **当选择 `telegram` 时** | 配置项：`TELEGRAM_BOT_TOKEN` & `TELEGRAM_CHAT_ID` <br>代理可选：`http_proxy`&`https_proxy` |                           [Telagram配置](https://www.nodeseek.com/post-22475-1)                           |
 
 ### 视频教程
 
