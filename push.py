@@ -55,6 +55,7 @@ class PushNotification:
         try:
             # 先尝试代理
             response = requests.post(url, json=payload, proxies=self.proxies, timeout=30)
+            logger.info("✅ Telegram响应: %s", response.text)
             response.raise_for_status()
             return True
         except Exception as e:
