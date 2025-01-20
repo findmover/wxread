@@ -58,6 +58,8 @@
 | **当选择 `wxpusher` 时** |                        `WXPUSHER_SPT`                        | [SPT获取页](https://wxpusher.zjiecode.com/docs/#/?id=%e8%8e%b7%e5%8f%96spt) |
 | **当选择 `telegram` 时** | 配置项：`TELEGRAM_BOT_TOKEN` & `TELEGRAM_CHAT_ID` <br>代理可选：`http_proxy`&`https_proxy` |                           [Telagram配置](https://www.nodeseek.com/post-22475-1)                           |
 
+**重要：除了READ_NUM配置在varables，其它的都配置在secrets里面的；需要推送PUSH_METHOD是必填的。**
+
 ### 视频教程
 
 [![视频教程](https://github.com/user-attachments/assets/ec144869-3dbb-40fe-9bc5-f8bf1b5fce3c)](https://www.bilibili.com/video/BV1kJ6gY3En3/ "点击查看视频")
