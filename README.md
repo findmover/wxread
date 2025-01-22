@@ -44,7 +44,7 @@
 
 - 基本属性
 
-|      secrets/varables       |                       Value                       |            说明            |
+|      secrets/varables（key）       |                       Value                       |            说明            |
 |:------------------:|:-------------------------------------------------:|:--------------------------:|
 | `WXREAD_CURL_BASH` |          抓到的 read 接口的 curl_bash 命令 (必填)           |      必须提供有效的指令    |
 |     `READ_NUM`     |                阅读次数，每次代表 30 秒 (可选)                |    控制阅读时长，默认 60 分钟 |
@@ -52,7 +52,7 @@
 
 - 推送方式
 
-|                          |                             key                              |                             说明                             |
+|                          |                            secrets(key)                           |                             说明(获取value)                             |
 | :----------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | **当选择 `pushplus` 时** |                       `PUSHPLUS_TOKEN`                       |       [Token获取页](https://www.pushplus.plus/uc.html)       |
 | **当选择 `wxpusher` 时** |                        `WXPUSHER_SPT`                        | [SPT获取页](https://wxpusher.zjiecode.com/docs/#/?id=%e8%8e%b7%e5%8f%96spt) |
