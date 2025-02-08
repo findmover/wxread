@@ -46,7 +46,7 @@
 
 | key                        | Value                               | 说明                                                         | 环境属性      |
 | ------------------------- | ---------------------------------- | ------------------------------------------------------------ | --------- |
-| `WXREAD_CURL_BASH`         | 抓取的 `read` 接口 `curl_bash` 命令 | **必填**，必须提供有效指令                                   | secrets   |
+| `WXREAD_CURL_BASH`         | 抓取 `read` 接口 `curl_bash` 命令 | **必填**，必须提供有效指令                                   | secrets   |
 | `READ_NUM`                 | 阅读次数（每次 30 秒）              | **可选**，控制阅读时长，默认 60 分钟                           | variables |
 | `PUSH_METHOD`              | `pushplus`/`wxpusher`/`telegram`    | **可选**，3选1，推送方式，默认不推送                                       |    secrets     |
 | `PUSHPLUS_TOKEN`           | PushPlus 的 token                   | 当 `PUSH_METHOD=pushplus` 时必填，[获取地址](https://www.pushplus.plus/uc.html) | secrets   |
