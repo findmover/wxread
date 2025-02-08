@@ -51,9 +51,7 @@
 | `PUSH_METHOD`              | `pushplus`/`wxpusher`/`telegram`    | **可选**，3选1，推送方式，默认不推送                                       |    secrets     |
 | `PUSHPLUS_TOKEN`           | PushPlus 的 token                   | 当 `PUSH_METHOD=pushplus` 时必填，[获取地址](https://www.pushplus.plus/uc.html) | secrets   |
 | `WXPUSHER_SPT`             | WxPusher 的token                    | 当 `PUSH_METHOD=wxpusher` 时必填，[获取地址](https://wxpusher.zjiecode.com/docs/#/?id=获取spt) | secrets   |
-| `TELEGRAM_BOT_TOKEN`       | Telegram Bot Token                  | 当 `PUSH_METHOD=telegram` 时必填，[配置文档](https://www.nodeseek.com/post-22475-1) | secrets   |
-| `TELEGRAM_CHAT_ID`         | Telegram 频道/群组 Chat ID          | 当 `PUSH_METHOD=telegram` 时必填                             | secrets   |
-| `http_proxy`/`https_proxy` | 代理地址                            | 当 `PUSH_METHOD=telegram` 时选填                             | secrets   |                       |
+| `TELEGRAM_BOT_TOKEN`  <br>`TELEGRAM_CHAT_ID`   <br>`http_proxy`/`https_proxy`| 群组id以及机器人token                 | 当 `PUSH_METHOD=telegram` 时必填，[配置文档](https://www.nodeseek.com/post-22475-1) | secrets   |
 
 **重要：除了READ_NUM配置在varables，其它的都配置在secrets里面的；需要推送`PUSH_METHOD`是必填的。**
 
