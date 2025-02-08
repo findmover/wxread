@@ -34,7 +34,7 @@
 
 
 - Fork这个仓库，在仓库 **Settings** -> 左侧列表中的 **Secrets and variables** -> **Actions**，然后在右侧的 **Repository secrets** 中添加如下值：
-  - `WXREAD_CURL_BASH`：复制read接口转换为bash的数据。
+  - `WXREAD_CURL_BASH`：上面抓read接口后转换为curl_bash的数据。
   - `PUSH_METHOD`：推送方法，3选1推送方式（pushplus、wxpusher、telegram）。
   - `PUSHPLUS_TOKEN` or `WXPUSHER_SPT` or `TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID`: 选择推送后填写对应token。
   
