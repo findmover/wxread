@@ -37,14 +37,12 @@
   - `WXREAD_CURL_BASH`：复制read接口转换为bash的数据。
   - `PUSH_METHOD`：推送方法，可以填写你想使用的推送方式（pushplus、wxpusher、telegram）。
   - `PUSHPLUS_TOKEN` or `WXPUSHER_SPT` or `TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID`: 推送key值。
-  
-- 在 **Variables** 部分，最下方添加变量：
   - `READ_NUM`：设定每次阅读的目标次数。
 
 
 - 基本属性
 
-|      secrets/varables（key）       |                       Value                       |            说明            |
+|      secrets（key）       |                       Value                       |            说明            |
 |:------------------:|:-------------------------------------------------:|:--------------------------:|
 | `WXREAD_CURL_BASH` |          抓到的 read 接口的 curl_bash 命令 (必填)           |      必须提供有效的指令    |
 |     `READ_NUM`     |                阅读次数，每次代表 30 秒 (可选)                |    控制阅读时长，默认 60 分钟 |
@@ -58,7 +56,7 @@
 | **当选择 `wxpusher` 时** |                        `WXPUSHER_SPT`                        | [SPT获取页](https://wxpusher.zjiecode.com/docs/#/?id=%e8%8e%b7%e5%8f%96spt) |
 | **当选择 `telegram` 时** | 配置项：`TELEGRAM_BOT_TOKEN` & `TELEGRAM_CHAT_ID` <br>代理(可选)：`http_proxy`&`https_proxy` |                           [Telagram配置](https://www.nodeseek.com/post-22475-1)                           |
 
-**重要：除了READ_NUM配置在varables，其它的都配置在secrets里面的；需要推送`PUSH_METHOD`是必填的。**
+**重要：需要推送`PUSH_METHOD`是必填的。**
 
 ### 视频教程
 
