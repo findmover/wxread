@@ -50,7 +50,7 @@
 
 - 推送方式
 
-|                          |                            secrets(key)                           |                             说明(获取value)                             |
+|                          |                            secrets(key)                           |                             (获取value)                             |
 | :----------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
 | **当选择 `pushplus` 时** |                       `PUSHPLUS_TOKEN`                       |       [Token获取页](https://www.pushplus.plus/uc.html)       |
 | **当选择 `wxpusher` 时** |                        `WXPUSHER_SPT`                        | [SPT获取页](https://wxpusher.zjiecode.com/docs/#/?id=%e8%8e%b7%e5%8f%96spt) |
