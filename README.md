@@ -6,17 +6,17 @@
 
 ## 项目介绍 📚
 
-这个脚本主要是为了在微信读书的阅读**挑战赛中刷时长**和**保持天数**。由于本人偶尔看书时未能及时签到，导致入场费打了水漂。网上找了一些，发现高赞的自动阅读需要挂虚拟器模拟或者用ADB模拟，实现一点也不优雅。因此，我决定编写一个自动化脚本。通过对官网接口的抓包和JS逆向分析实现。
+这个脚本主要是为了在微信读书的阅读**挑战赛中刷时长**和**保持天数**。由于本人偶尔看书时未能及时签到，导致入场费打了水漂。网上找了一些，发现高赞的自动阅读需要挂阅读器模拟或者用ADB模拟，实现一点也不优雅。因此，我决定编写一个自动化脚本。通过对官网接口的抓包和JS逆向分析实现。
 
 该脚本具备以下功能：
 
-- **自动刷阅读时长**：默认计入排行榜和挑战赛，时长可调节，默认为60分钟。
-- **定时运行**：可部署在GitHub Action/服务器上，支持每天定时运行并推送结果到微信。
-- **Cookie自动更新**：一次抓包后，脚本能自动获取并更新Cookie，支持长时间使用。
-- **轻量化设计**：本脚本实现了轻量化的编写，部署服务器、GIthub action均可运行，无需额外环境条件。
+- **阅读时长调节**：默认计入排行榜和挑战赛，时长可调节，默认为60分钟。
+- **定时运行推送**：可部署在GitHub Action/服务器上，支持每天定时运行并推送结果到微信。
+- **Cookie自动更新**：脚本能自动获取并更新Cookie，一次部署后面无需其它操作。
+- **轻量化设计**：本脚本实现了轻量化的编写，部署服务器/GIthub action后到点运行，无需额外硬件。
 
 ***
-## 操作步骤（v4.0） 🛠️
+## 操作步骤（v5.0） 🛠️
 
 ### 抓包准备
 
@@ -35,28 +35,25 @@
 
 - Fork这个仓库，在仓库 **Settings** -> 左侧列表中的 **Secrets and variables** -> **Actions**，然后在右侧的 **Repository secrets** 中添加如下值：
   - `WXREAD_CURL_BASH`：复制read接口转换为bash的数据。
-  - `PUSH_METHOD`：推送方法，可以填写你想使用的推送方式（pushplus、wxpusher、telegram）。
-  - `PUSHPLUS_TOKEN` or `WXPUSHER_SPT` or `TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID`: 推送key值。
+  - `PUSH_METHOD`：推送方法，3选1推送方式（pushplus、wxpusher、telegram）。
+  - `PUSHPLUS_TOKEN` or `WXPUSHER_SPT` or `TELEGRAM_BOT_TOKEN`&`TELEGRAM_CHAT_ID`: 选择推送后填写对应token。
   
 - 在 **Variables** 部分，最下方添加变量：
   - `READ_NUM`：设定每次阅读的目标次数。
 
 
-- 基本属性
+- 基本释义：
 
-|      secrets/varables（key）       |                       Value                       |            说明            |
-|:------------------:|:-------------------------------------------------:|:--------------------------:|
-| `WXREAD_CURL_BASH` |          抓到的 read 接口的 curl_bash 命令 (必填)           |      必须提供有效的指令    |
-|     `READ_NUM`     |                阅读次数，每次代表 30 秒 (可选)                |    控制阅读时长，默认 60 分钟 |
-|   `PUSH_METHOD`    | 推送方式，可选值为 `pushplus`、`wxpusher` 或 `telegram`  |    选择推送方式，默认不推送  |
-
-- 推送方式
-
-|                          |                            secrets(key)                           |                             说明(获取value)                             |
-| :----------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| **当选择 `pushplus` 时** |                       `PUSHPLUS_TOKEN`                       |       [Token获取页](https://www.pushplus.plus/uc.html)       |
-| **当选择 `wxpusher` 时** |                        `WXPUSHER_SPT`                        | [SPT获取页](https://wxpusher.zjiecode.com/docs/#/?id=%e8%8e%b7%e5%8f%96spt) |
-| **当选择 `telegram` 时** | 配置项：`TELEGRAM_BOT_TOKEN` & `TELEGRAM_CHAT_ID` <br>代理(可选)：`http_proxy`&`https_proxy` |                           [Telagram配置](https://www.nodeseek.com/post-22475-1)                           |
+| key                        | Value                               | 说明                                                         | 环境属性      |
+| ------------------------- | ---------------------------------- | ------------------------------------------------------------ | --------- |
+| `WXREAD_CURL_BASH`         | 抓取的 `read` 接口 `curl_bash` 命令 | **必填**，必须提供有效指令                                   | secrets   |
+| `READ_NUM`                 | 阅读次数（每次 30 秒）              | **可选**，控制阅读时长，默认 60 分钟                           | variables |
+| `PUSH_METHOD`              | `pushplus`/`wxpusher`/`telegram`    | **可选**，3选1，推送方式，默认不推送                                       |    secrets     |
+| `PUSHPLUS_TOKEN`           | PushPlus 的 token                   | 当 `PUSH_METHOD=pushplus` 时必填，[获取地址](https://www.pushplus.plus/uc.html) | secrets   |
+| `WXPUSHER_SPT`             | WxPusher 的token                    | 当 `PUSH_METHOD=wxpusher` 时必填，[获取地址](https://wxpusher.zjiecode.com/docs/#/?id=获取spt) | secrets   |
+| `TELEGRAM_BOT_TOKEN`       | Telegram Bot Token                  | 当 `PUSH_METHOD=telegram` 时必填，[配置文档](https://www.nodeseek.com/post-22475-1) | secrets   |
+| `TELEGRAM_CHAT_ID`         | Telegram 频道/群组 Chat ID          | 当 `PUSH_METHOD=telegram` 时必填                             | secrets   |
+| `http_proxy`/`https_proxy` | 代理地址                            | 当 `PUSH_METHOD=telegram` 时选填                             | secrets   |                       |
 
 **重要：除了READ_NUM配置在varables，其它的都配置在secrets里面的；需要推送`PUSH_METHOD`是必填的。**
 
