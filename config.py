@@ -7,7 +7,7 @@ import random
 可修改区域
 默认使用本地值如果不存在从环境变量中获取值
 """
-random_num = random.randint(60, 150)
+random_num = random.randint(120, 150)
 # 阅读次数 默认120次/60分钟
 READ_NUM = int(os.getenv('READ_NUM') or random_num)
 # 需要推送时可选，可选pushplus、wxpusher、telegram
