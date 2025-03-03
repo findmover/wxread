@@ -122,7 +122,7 @@ class PushNotification:
 
 
 def push(content, method):
-    """统一推送接口，支持 PushPlus、Telegram 和 WxPusher"""
+    """统一推送接口，支持 PushPlus、Telegram、WxPusher 和 Gotify"""
     notifier = PushNotification()
 
     if method == "pushplus":
@@ -137,4 +137,4 @@ def push(content, method):
     elif method == "gotify":
         return notifier.push_gotify(content, GOTIFY_URL, GOTIFY_APP_TOKEN)
     else:
-        raise ValueError("❌ 无效的通知渠道，请选择 'pushplus'、'telegram' 或 'wxpusher'")
+        raise ValueError("❌ 无效的通知渠道，请选择 'pushplus'、'telegram'、'wxpusher'、'gotify'")
