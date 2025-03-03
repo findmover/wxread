@@ -1,4 +1,4 @@
-# push.py 支持 PushPlus 、wxpusher、Telegram 的消息推送模块
+# push.py 支持 PushPlus 、wxpusher、Telegram、Gotify 的消息推送模块
 import os
 import random
 import time
