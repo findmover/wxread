@@ -38,7 +38,7 @@ jobs:
 
     - name: Generate random READ_NUM
       run: |
-        RANDOM_NUM=$((RANDOM % 721 + 120)) # 生成 120 到 840（60 到 420 分钟，数字1=30秒）
+        RANDOM_NUM=$((RANDOM % 721 + 120)) # 生成 120 到 840（60 到 420 分钟，数字1=30秒）1-7小时，保证八点之前收到通知
         echo "READ_NUM=$RANDOM_NUM" >> $GITHUB_ENV
 
     - name: Run deployment script
