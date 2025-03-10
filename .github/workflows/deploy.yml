@@ -2,7 +2,7 @@ name: wxread
 
 on:
   schedule:
-    - cron: '0 17 * * *'  # 每天北京时间凌晨1点执行（UTC时间17点）
+    - cron: '0 16 * * *'  # 北京时间 0:00 启动（UTC 时间 16:00）
   workflow_dispatch:  # 手动触发
 
 jobs:
@@ -30,6 +30,17 @@ jobs:
         python -m pip install --upgrade pip
         pip install certifi==2024.8.30 charset-normalizer==3.4.0 idna==3.10 requests==2.32.3 urllib3==2.2.3
 
+    - name: Random delay between 0-120 minutes
+      run: |
+        DELAY=$((RANDOM % 1)) # 生成 0 到 120 分钟的随机延迟
+        echo "Delaying for $DELAY minutes..."
+        sleep $((DELAY * 60)) # 转换为秒并等待
+
+    - name: Generate random READ_NUM
+      run: |
+        RANDOM_NUM=$((RANDOM % 1 + 1)) # 生成 60 到 180（30 到 90 分钟）
+        echo "READ_NUM=$RANDOM_NUM" >> $GITHUB_ENV
+
     - name: Run deployment script
       env:
         WXREAD_CURL_BASH: ${{ secrets.WXREAD_CURL_BASH }}
@@ -38,7 +49,6 @@ jobs:
         WXPUSHER_SPT: ${{ secrets.WXPUSHER_SPT }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        READ_NUM: ${{ vars.READ_NUM }}  # 使用 Repository Variables
-
+        READ_NUM: ${{ env.READ_NUM }}  # 使用随机生成的 READ_NUM
       run: |
         python main.py
