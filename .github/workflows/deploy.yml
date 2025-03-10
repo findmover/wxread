@@ -32,13 +32,13 @@ jobs:
 
     - name: Random delay between 0-120 minutes
       run: |
-        DELAY=$((RANDOM % 1)) # 生成 0 到 120 分钟的随机延迟
+        DELAY=$((RANDOM % 121)) # 生成 0 到 120 分钟的随机延迟
         echo "Delaying for $DELAY minutes..."
         sleep $((DELAY * 60)) # 转换为秒并等待
 
     - name: Generate random READ_NUM
       run: |
-        RANDOM_NUM=$((RANDOM % 1 + 1)) # 生成 60 到 180（30 到 90 分钟）
+        RANDOM_NUM=$((RANDOM % 121 + 120)) # 阅读时间范围是 120 到 240 分钟（包括 120 和 240 分钟）
         echo "READ_NUM=$RANDOM_NUM" >> $GITHUB_ENV
 
     - name: Run deployment script
