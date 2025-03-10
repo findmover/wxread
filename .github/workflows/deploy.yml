@@ -30,15 +30,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install certifi==2024.8.30 charset-normalizer==3.4.0 idna==3.10 requests==2.32.3 urllib3==2.2.3
 
-    - name: Random delay between 0-120 minutes
+    - name: Random delay between 0-60 minutes
       run: |
-        DELAY=$((RANDOM % 121)) # 生成 0 到 120 分钟的随机延迟
+        DELAY=$((RANDOM % 61)) # 生成 0 到 60 分钟的随机延迟
         echo "Delaying for $DELAY minutes..."
         sleep $((DELAY * 60)) # 转换为秒并等待
 
     - name: Generate random READ_NUM
       run: |
-        RANDOM_NUM=$((RANDOM % 121 + 120)) # 阅读时间范围是 120 到 240 分钟（包括 120 和 240 分钟）
+        RANDOM_NUM=$((RANDOM % 841 + 120)) # 生成 120 到 960（60 到 480 分钟，数字1=30秒）
         echo "READ_NUM=$RANDOM_NUM" >> $GITHUB_ENV
 
     - name: Run deployment script
