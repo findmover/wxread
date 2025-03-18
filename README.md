@@ -49,6 +49,7 @@
 | `WXREAD_CURL_BASH`         | `read` 接口 `curl_bash`数据 | **必填**，必须提供有效指令                                   | secrets   |
 | `READ_NUM`                 | 阅读次数（每次 30 秒）              | **可选**，阅读时长，默认 60 分钟                           | variables |
 | `PUSH_METHOD`              | `pushplus`/`wxpusher`/`telegram`    | **可选**，推送方式，3选1，默认不推送                                       |    secrets     |
+| `APPRISE_URLS`             | Apprise支持的各类通知URL，包括Discord、Slack、Gotify、电子邮件等等，具体见[列表说明](https://github.com/caronc/apprise?tab=readme-ov-file#supported-notifications) <br> 此外本项目还额外支持`pushplus://{token}`和`wxpusherspt://{SPT}`两种形式 | **可选**，可以同时指定多个URL，不同URL之间以`,`隔开 <br> 当`PUSH_METHOD`不为空时此项无效 | secrets |
 | `PUSHPLUS_TOKEN`           | PushPlus 的 token                   | 当 `PUSH_METHOD=pushplus` 时必填，[获取地址](https://www.pushplus.plus/uc.html) | secrets   |
 | `WXPUSHER_SPT`             | WxPusher 的token                    | 当 `PUSH_METHOD=wxpusher` 时必填，[获取地址](https://wxpusher.zjiecode.com/docs/#/?id=获取spt) | secrets   |
 | `TELEGRAM_BOT_TOKEN`  <br>`TELEGRAM_CHAT_ID`   <br>`http_proxy`/`https_proxy`（可选）| 群组id以及机器人token                 | 当 `PUSH_METHOD=telegram` 时必填，[配置文档](https://www.nodeseek.com/post-22475-1) | secrets   |
