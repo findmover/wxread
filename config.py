@@ -11,6 +11,8 @@ import re
 READ_NUM = int(os.getenv('READ_NUM') or 120)
 # 需要推送时可选，可选pushplus、wxpusher、telegram
 PUSH_METHOD = "" or os.getenv('PUSH_METHOD')
+# 通用推送配置
+APPRISE_URLS = [u.strip() for u in os.getenv("APPRISE_URLS", '').split(',')]
 # pushplus推送时需填
 PUSHPLUS_TOKEN = "" or os.getenv("PUSHPLUS_TOKEN")
 # telegram推送时需填
