@@ -71,9 +71,12 @@ def convert(curl_command):
     # 提取 cookies
     cookies = {}
     cookie_string = headers.pop('cookie', '')
-    for cookie in cookie_string.split('; '):
-        key, value = cookie.split('=', 1)
-        cookies[key] = value
+    if cookie_string:  # 确保 cookie_string 不是空字符串
+        for cookie in cookie_string.split('; '):
+            if '=' in cookie:  # 确保 cookie 中包含 '='
+                print(cookie)
+                key, value = cookie.split('=', 1)
+                cookies[key] = value
 
     return headers, cookies
 
