@@ -42,14 +42,14 @@ cookies = {
     'wr_vid': '73619349',
     'wr_rt': 'web%40mA2YLHsfEHO0IiZO0CP_AL',
     'wr_fp': '3692135753',
-    'wr_skey': 'pNBjD_2l',
-    'wr_pf': 'undefined',
+    'wr_pf': 'NaN',
+    'wr_skey': 'oIV3aYFT',
 }
 
 headers = {
     'accept': 'application/json, text/plain, */*',
     'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8',
-    'baggage': 'sentry-environment=production,sentry-release=dev-1738835404736,sentry-public_key=ed67ed71f7804a038e898ba54bd66e44,sentry-trace_id=46eb98e315c346be9f57aedcaa5adb7b',
+    'baggage': 'sentry-environment=production,sentry-release=dev-1742474690576,sentry-public_key=ed67ed71f7804a038e898ba54bd66e44,sentry-trace_id=6e88abafcc05491291ce07a16090960f',
     'cache-control': 'no-cache',
     'content-type': 'application/json;charset=UTF-8',
     'origin': 'https://weread.qq.com',
@@ -62,26 +62,29 @@ headers = {
     'sec-fetch-dest': 'empty',
     'sec-fetch-mode': 'cors',
     'sec-fetch-site': 'same-origin',
-    'sentry-trace': '46eb98e315c346be9f57aedcaa5adb7b-9e4868485b3e460b',
+    'sentry-trace': '6e88abafcc05491291ce07a16090960f-8e2270fd93ea930f',
     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36',
-    # 'cookie': 'iip=0; _qimei_q36=; _qimei_h38=bafb76fc23de31a2a092cec40300000cc18217; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22191b16bd60a55c-0fb2646ef7ec56-17525637-2073600-191b16bd60b322%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%7D%2C%22identities%22%3A%22eyIkaWRlbnRpdHlfY29va2llX2lkIjoiMTkxYjE2YmQ2MGE1NWMtMGZiMjY0NmVmN2VjNTYtMTc1MjU2MzctMjA3MzYwMC0xOTFiMTZiZDYwYjMyMiJ9%22%2C%22history_login_id%22%3A%7B%22name%22%3A%22%22%2C%22value%22%3A%22%22%7D%2C%22%24device_id%22%3A%22191b16bd60a55c-0fb2646ef7ec56-17525637-2073600-191b16bd60b322%22%7D; _ga=GA1.2.1724625815.1725258521; pac_uid=0_Dhzxz48ZNTWh6; suid=user_0_Dhzxz48ZNTWh6; pgv_pvid=8249101234; wr_localvid=3eb328d0746357953ebfdac; wr_name=%E5%BC%A0%E6%B4%8B; wr_avatar=https%3A%2F%2Fthirdwx.qlogo.cn%2Fmmopen%2Fvi_32%2FQ0j4TwGTfTKpZehZfaoicvXZ6FZialWjs2AIQQ6raqTOgpYmPYiabjyZibKGUGicF0FvQ5uMynD6W8wZO9EmSPHVXQw%2F132; wr_gender=1; _qimei_fingerprint=5cfd92629ca389803c4cf6d883b6b292; _clck=fsx6kg|1|fty|0; wr_gid=253935748; wr_vid=73619349; wr_rt=web%40mA2YLHsfEHO0IiZO0CP_AL; wr_fp=3692135753; wr_skey=pNBjD_2l; wr_pf=undefined',
+    # 'cookie': 'iip=0; _qimei_q36=; _qimei_h38=bafb76fc23de31a2a092cec40300000cc18217; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22191b16bd60a55c-0fb2646ef7ec56-17525637-2073600-191b16bd60b322%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%7D%2C%22identities%22%3A%22eyIkaWRlbnRpdHlfY29va2llX2lkIjoiMTkxYjE2YmQ2MGE1NWMtMGZiMjY0NmVmN2VjNTYtMTc1MjU2MzctMjA3MzYwMC0xOTFiMTZiZDYwYjMyMiJ9%22%2C%22history_login_id%22%3A%7B%22name%22%3A%22%22%2C%22value%22%3A%22%22%7D%2C%22%24device_id%22%3A%22191b16bd60a55c-0fb2646ef7ec56-17525637-2073600-191b16bd60b322%22%7D; _ga=GA1.2.1724625815.1725258521; pac_uid=0_Dhzxz48ZNTWh6; suid=user_0_Dhzxz48ZNTWh6; pgv_pvid=8249101234; wr_localvid=3eb328d0746357953ebfdac; wr_name=%E5%BC%A0%E6%B4%8B; wr_avatar=https%3A%2F%2Fthirdwx.qlogo.cn%2Fmmopen%2Fvi_32%2FQ0j4TwGTfTKpZehZfaoicvXZ6FZialWjs2AIQQ6raqTOgpYmPYiabjyZibKGUGicF0FvQ5uMynD6W8wZO9EmSPHVXQw%2F132; wr_gender=1; _qimei_fingerprint=5cfd92629ca389803c4cf6d883b6b292; _clck=fsx6kg|1|fty|0; wr_gid=253935748; wr_vid=73619349; wr_rt=web%40mA2YLHsfEHO0IiZO0CP_AL; wr_fp=3692135753; wr_pf=NaN; wr_skey=oIV3aYFT',
 }
 
 """
 建议保留区域|默认读三体，其它书籍自行测试时间是否增加
 """
 data = {
-    'appId': 'wb115321887466h1205141645',
-    'b': '54432ff05c8966544e5bbfe',
-    'c': 'ecc32f3013eccbc87e4b62e',
-    'ci': 3,
-    'co': 991,
-    'sm': '甘亮仍继续望着，却见斜对岸人群中隐约一个',
-    'pr': 0,
-    'ct': 1742454918,
-    'ps': '024324007a62c672g014f2d',
-    'pc': '05632cb07a62c673g011135',
-    's': 'afede9d8',
+    "appId": "wb182564874663h152492176",
+    "b": "ce032b305a9bc1ce0b0dd2a",
+    "c": "7cb321502467cbbc409e62d",
+    "ci": 70,
+    "co": 0,
+    "sm": "[插图]第三部广播纪元7年，程心艾AA说",
+    "pr": 74,
+    "rt": 30,
+    "ts": 1727660516749,
+    "rn": 31,
+    "sg": "991118cc229871a5442993ecb08b5d2844d7f001dbad9a9bc7b2ecf73dc8db7e",
+    "ct": 1727660516,
+    "ps": "b1d32a307a4c3259g016b67",
+    "pc": "080327b07a4c3259g018787",
 }
 
 
