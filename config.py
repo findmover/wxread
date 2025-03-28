@@ -39,17 +39,17 @@ cookies = {
     '_qimei_fingerprint': '5cfd92629ca389803c4cf6d883b6b292',
     '_clck': 'fsx6kg|1|fty|0',
     'wr_gid': '253935748',
-    'wr_vid': '73619349',
-    'wr_rt': 'web%40mA2YLHsfEHO0IiZO0CP_AL',
     'wr_fp': '3692135753',
     'wr_pf': 'NaN',
-    'wr_skey': 'oIV3aYFT',
+    'wr_skey': 'CFjMfJSw',
+    'wr_vid': '73619349',
+    'wr_rt': 'web%40bfhOHkkJRCf0Ky9HWEr_AL',
 }
 
 headers = {
     'accept': 'application/json, text/plain, */*',
     'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8',
-    'baggage': 'sentry-environment=production,sentry-release=dev-1742474690576,sentry-public_key=ed67ed71f7804a038e898ba54bd66e44,sentry-trace_id=6e88abafcc05491291ce07a16090960f',
+    'baggage': 'sentry-environment=production,sentry-release=dev-1743080809165,sentry-public_key=ed67ed71f7804a038e898ba54bd66e44,sentry-trace_id=b505926e671e48829a2d1f43a4cab224',
     'cache-control': 'no-cache',
     'content-type': 'application/json;charset=UTF-8',
     'origin': 'https://weread.qq.com',
@@ -62,11 +62,10 @@ headers = {
     'sec-fetch-dest': 'empty',
     'sec-fetch-mode': 'cors',
     'sec-fetch-site': 'same-origin',
-    'sentry-trace': '6e88abafcc05491291ce07a16090960f-8e2270fd93ea930f',
+    'sentry-trace': 'b505926e671e48829a2d1f43a4cab224-af6bcf5a28e41f66',
     'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36',
-    # 'cookie': 'iip=0; _qimei_q36=; _qimei_h38=bafb76fc23de31a2a092cec40300000cc18217; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22191b16bd60a55c-0fb2646ef7ec56-17525637-2073600-191b16bd60b322%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%7D%2C%22identities%22%3A%22eyIkaWRlbnRpdHlfY29va2llX2lkIjoiMTkxYjE2YmQ2MGE1NWMtMGZiMjY0NmVmN2VjNTYtMTc1MjU2MzctMjA3MzYwMC0xOTFiMTZiZDYwYjMyMiJ9%22%2C%22history_login_id%22%3A%7B%22name%22%3A%22%22%2C%22value%22%3A%22%22%7D%2C%22%24device_id%22%3A%22191b16bd60a55c-0fb2646ef7ec56-17525637-2073600-191b16bd60b322%22%7D; _ga=GA1.2.1724625815.1725258521; pac_uid=0_Dhzxz48ZNTWh6; suid=user_0_Dhzxz48ZNTWh6; pgv_pvid=8249101234; wr_localvid=3eb328d0746357953ebfdac; wr_name=%E5%BC%A0%E6%B4%8B; wr_avatar=https%3A%2F%2Fthirdwx.qlogo.cn%2Fmmopen%2Fvi_32%2FQ0j4TwGTfTKpZehZfaoicvXZ6FZialWjs2AIQQ6raqTOgpYmPYiabjyZibKGUGicF0FvQ5uMynD6W8wZO9EmSPHVXQw%2F132; wr_gender=1; _qimei_fingerprint=5cfd92629ca389803c4cf6d883b6b292; _clck=fsx6kg|1|fty|0; wr_gid=253935748; wr_vid=73619349; wr_rt=web%40mA2YLHsfEHO0IiZO0CP_AL; wr_fp=3692135753; wr_pf=NaN; wr_skey=oIV3aYFT',
+    # 'cookie': 'iip=0; _qimei_q36=; _qimei_h38=bafb76fc23de31a2a092cec40300000cc18217; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%22191b16bd60a55c-0fb2646ef7ec56-17525637-2073600-191b16bd60b322%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%7D%2C%22identities%22%3A%22eyIkaWRlbnRpdHlfY29va2llX2lkIjoiMTkxYjE2YmQ2MGE1NWMtMGZiMjY0NmVmN2VjNTYtMTc1MjU2MzctMjA3MzYwMC0xOTFiMTZiZDYwYjMyMiJ9%22%2C%22history_login_id%22%3A%7B%22name%22%3A%22%22%2C%22value%22%3A%22%22%7D%2C%22%24device_id%22%3A%22191b16bd60a55c-0fb2646ef7ec56-17525637-2073600-191b16bd60b322%22%7D; _ga=GA1.2.1724625815.1725258521; pac_uid=0_Dhzxz48ZNTWh6; suid=user_0_Dhzxz48ZNTWh6; pgv_pvid=8249101234; wr_localvid=3eb328d0746357953ebfdac; wr_name=%E5%BC%A0%E6%B4%8B; wr_avatar=https%3A%2F%2Fthirdwx.qlogo.cn%2Fmmopen%2Fvi_32%2FQ0j4TwGTfTKpZehZfaoicvXZ6FZialWjs2AIQQ6raqTOgpYmPYiabjyZibKGUGicF0FvQ5uMynD6W8wZO9EmSPHVXQw%2F132; wr_gender=1; _qimei_fingerprint=5cfd92629ca389803c4cf6d883b6b292; _clck=fsx6kg|1|fty|0; wr_gid=253935748; wr_fp=3692135753; wr_pf=NaN; wr_skey=CFjMfJSw; wr_vid=73619349; wr_rt=web%40bfhOHkkJRCf0Ky9HWEr_AL',
 }
-
 """
 建议保留区域|默认读三体，其它书籍自行测试时间是否增加
 """
