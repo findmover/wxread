@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-22.04
+    timeout-minutes: 1000
     environment: AutoRead  # 指定环境
 
     steps:
