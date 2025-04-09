@@ -80,6 +80,7 @@ while index <= READ_NUM:
             logging.error(ERROR_CODE)
             push(ERROR_CODE, PUSH_METHOD)
             raise Exception(ERROR_CODE)
+    data.pop('s')
 
 logging.info("🎉 阅读脚本已完成！")
 
