@@ -53,6 +53,8 @@ def get_wr_skey():
 
 index = 1
 while index <= READ_NUM:
+    if 's' in data.keys():
+        data.pop('s')
     data['ct'] = int(time.time())
     data['ts'] = int(time.time() * 1000)
     data['rn'] = random.randint(0, 1000)
@@ -80,7 +82,6 @@ while index <= READ_NUM:
             logging.error(ERROR_CODE)
             push(ERROR_CODE, PUSH_METHOD)
             raise Exception(ERROR_CODE)
-    data.pop('s')
 
 logging.info("🎉 阅读脚本已完成！")
 
