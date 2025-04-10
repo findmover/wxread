@@ -70,7 +70,7 @@ while index <= READ_NUM:
 
     if 'succ' in resData:
         index += 1
-        time.sleep(30)
+        time.sleep(40)
         logging.info(f"✅ 阅读成功，阅读进度：{(index - 1) * 0.5} 分钟")
 
     else:
