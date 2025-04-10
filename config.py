@@ -40,7 +40,7 @@ headers = {
 """
 建议保留区域|默认读三体，其它书籍自行测试时间是否增加
 """
-data = [{
+dataArray = [{
     "appId": "wb182564874603h266381671",
     "b": "ce032b305a9bc1ce0b0dd2a",
     "c": "7f632b502707f6ffaa6bf2e",
