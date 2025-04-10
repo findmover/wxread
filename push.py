@@ -1,11 +1,11 @@
-# push.py 支持 PushPlus 、wxpusher、Telegram 的消息推送模块
+# push.py 支持 PushPlus 、wxpusher、Telegram、Gotify 的消息推送模块
 import os
 import random
 import time
 import json
 import requests
 import logging
-from config import PUSHPLUS_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_BOT_TOKEN, WXPUSHER_SPT
+from config import PUSHPLUS_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_BOT_TOKEN, WXPUSHER_SPT, GOTIFY_URL, GOTIFY_APP_TOKEN
 
 logger = logging.getLogger(__name__)
 
@@ -68,12 +68,12 @@ class PushNotification:
             except Exception as e:
                 logger.error("❌ Telegram发送失败: %s", e)
                 return False
-    
+
     def push_wxpusher(self, content, spt):
         """WxPusher消息推送（极简方式）"""
         attempts = 5
         url = self.wxpusher_simple_url.format(spt, content)
-        
+
         for attempt in range(attempts):
             try:
                 response = requests.get(url, timeout=10)
@@ -87,12 +87,42 @@ class PushNotification:
                     logger.info("将在 %d 秒后重试...", sleep_time)
                     time.sleep(sleep_time)
 
+    def push_gotify(self, content, gotify_url, gotify_app_token):
+        """Gotify消息推送"""
+        # gotify_url example: "https://your.gotify.url"
+
+        url = f"{gotify_url}/message?token={gotify_app_token}"
+
+        attempts = 5
+        for attempt in range(attempts):
+            try:
+                response = requests.post(
+                    url,
+                    data=json.dumps({
+                        "title": "微信阅读推送...",
+                        "message": content
+                    }).encode('utf-8'),
+                    headers=self.headers,
+                    timeout=10
+                )
+                response.raise_for_status()
+                logger.info("✅ Gotify响应: %s", response.text)
+                break  # 成功推送，跳出循环
+            except requests.exceptions.RequestException as e:
+                logger.error("❌ Gotify推送失败: %s", e)
+                if attempt < attempts - 1:  # 如果不是最后一次尝试
+                    sleep_time = random.randint(180, 360)  # 随机3到6分钟
+                    logger.info("将在 %d 秒后重试...", sleep_time)
+                    time.sleep(sleep_time)
+
+
+
 
 """外部调用"""
 
 
 def push(content, method):
-    """统一推送接口，支持 PushPlus、Telegram 和 WxPusher"""
+    """统一推送接口，支持 PushPlus、Telegram、WxPusher 和 Gotify"""
     notifier = PushNotification()
 
     if method == "pushplus":
@@ -104,5 +134,7 @@ def push(content, method):
         return notifier.push_telegram(content, bot_token, chat_id)
     elif method == "wxpusher":
         return notifier.push_wxpusher(content, WXPUSHER_SPT)
+    elif method == "gotify":
+        return notifier.push_gotify(content, GOTIFY_URL, GOTIFY_APP_TOKEN)
     else:
-        raise ValueError("❌ 无效的通知渠道，请选择 'pushplus'、'telegram' 或 'wxpusher'")
+        raise ValueError("❌ 无效的通知渠道，请选择 'pushplus'、'telegram'、'wxpusher'、'gotify'")
