@@ -7,8 +7,8 @@ import re
 默认使用本地值如果不存在从环境变量中获取值
 """
 
-# 阅读次数 默认120次/60分钟
-READ_NUM = int(os.getenv('READ_NUM') or 120)
+# 阅读次数 默认40次/20分钟
+READ_NUM = int(os.getenv('READ_NUM') or 40)
 # 需要推送时可选，可选pushplus、wxpusher、telegram
 PUSH_METHOD = "" or os.getenv('PUSH_METHOD')
 # pushplus推送时需填
