@@ -54,7 +54,7 @@ def get_wr_skey():
 
 
 index = 1
-while index <= READ_NUM * 2:
+while index <= READ_NUM:
     data['b'] = random.choice(book)
     data['c'] = random.choice(chapter)
     data['ct'] = int(time.time())
@@ -65,6 +65,8 @@ while index <= READ_NUM * 2:
 
     logging.info(f"⏱️ 尝试第 {index} 次阅读...")
     logging.info(f"📕 data: {data} ...")
+    response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
+    time.sleep(15)
     response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
     resData = response.json()
 
