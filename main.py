@@ -54,11 +54,15 @@ def get_wr_skey():
 
 
 index = 1
+lastTime = int(time.time()) - 30
 while index <= READ_NUM:
     data['b'] = random.choice(book)
     data['c'] = random.choice(chapter)
-    data['ct'] = int(time.time())
-    data['ts'] = int(time.time() * 1000) + random.randint(0, 1000)
+    thisTime = int(time.time())
+    data['ct'] = thisTime
+    data['rt'] = thisTime - lastTime
+    lastTime = thisTime
+    data['ts'] = int(thisTime * 1000) + random.randint(0, 1000)
     data['rn'] = random.randint(0, 1000)
     data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
     data['s'] = cal_hash(encode_data(data))
@@ -66,13 +70,11 @@ while index <= READ_NUM:
     logging.info(f"⏱️ 尝试第 {index} 次阅读...")
     logging.info(f"📕 data: {data} ...")
     response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
-    time.sleep(15)
-    response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
     resData = response.json()
 
     if 'succ' in resData:
         index += 1
-        time.sleep(15)
+        time.sleep(30)
         logging.info(f"✅ 阅读成功，阅读进度：{(index - 1) * 0.5} 分钟")
 
     else:
