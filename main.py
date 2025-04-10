@@ -58,12 +58,13 @@ while index <= READ_NUM:
     data['b'] = random.choice(book)
     data['c'] = random.choice(chapter)
     data['ct'] = int(time.time())
-    data['ts'] = int(time.time() * 1000)
+    data['ts'] = int(time.time() * 1000) + random.randint(0, 1000)
     data['rn'] = random.randint(0, 1000)
     data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
     data['s'] = cal_hash(encode_data(data))
 
     logging.info(f"⏱️ 尝试第 {index} 次阅读...")
+    logging.info(f"📕 data: {data} ...")
     response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
     resData = response.json()
 
