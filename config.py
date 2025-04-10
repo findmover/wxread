@@ -23,20 +23,17 @@ curl_str = os.getenv('WXREAD_CURL_BASH')
 
 # headers、cookies是一个省略模版，本地或者docker部署时对应替换
 cookies = {
-    'RK': 'oxEY1bTnXf',
-    'ptcz': '53e3b35a9486dd63c4d06430b05aa169402117fc407dc5cc9329b41e59f62e2b',
-    'pac_uid': '0_e63870bcecc18',
-    'iip': '0',
-    '_qimei_uuid42': '183070d3135100ee797b08bc922054dc3062834291',
-    'wr_avatar': 'https%3A%2F%2Fthirdwx.qlogo.cn%2Fmmopen%2Fvi_32%2FeEOpSbFh2Mb1bUxMW9Y3FRPfXwWvOLaNlsjWIkcKeeNg6vlVS5kOVuhNKGQ1M8zaggLqMPmpE5qIUdqEXlQgYg%2F132',
-    'wr_gender': '0',
+    'RK': '/U1VY/LPdb',
+    'ptcz': 'feb3de917f87400787fbf5934e2b46b5466545f34bf8a5c7adbdc5bc8ab371ae',
+    'wr_avatar': 'https%3A%2F%2Fthirdwx.qlogo.cn%2Fmmopen%2Fvi_32%2FQ0j4TwGTfTI51cu6AvvQV8cIicf5ezL7PjKjTdrgTss6icXBsJSibTykIkMTGQzI0QxHDKs4KbKOmrUxbjC9u9ZVQ%2F132',
+    'wr_gender': '1',
 }
 
 headers = {
     'accept': 'application/json, text/plain, */*',
-    'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6,ko;q=0.5',
-    'baggage': 'sentry-environment=production,sentry-release=dev-1730698697208,sentry-public_key=ed67ed71f7804a038e898ba54bd66e44,sentry-trace_id=1ff5a0725f8841088b42f97109c45862',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36 Edg/131.0.0.0',
+    'accept-language': 'zh-CN,zh;q=0.9',
+    'baggage': 'sentry-environment=production,sentry-release=dev-1743523268690,sentry-public_key=ed67ed71f7804a038e898ba54bd66e44,sentry-trace_id=f28b984c208449548d5d2b40dc3d3876',
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.6261.95 Safari/537.36',
 }
 
 
@@ -46,19 +43,19 @@ headers = {
 data = {
     "appId": "wb182564874603h266381671",
     "b": "ce032b305a9bc1ce0b0dd2a",
-    "c": "2663284026026657d5ffeed",
-    "ci": 11,
+    "c": "7f632b502707f6ffaa6bf2e",
+    "ci": 27,
     "co": 389,
-    "sm": "3射手和农场主第二天是周末，汪淼反而起得",
+    "sm": "19聚会《三体》网友的聚会地点是一处僻静",
     "pr": 74,
-    "rt": 25,
-    "ts": 1744250151927,
-    "rn": 652,
-    "sg": "8a2c344fea7eaca0c9203edba858dd4c35c998a3775655d00f608b9af131a522",
-    "ct": 1744250151,
-    "ps": "dc8328b07a6583b2g014795",
-    "pc": "dc0321207a6583b2g01687d",
-    "s": "fbf4f994"
+    "rt": 15,
+    "ts": 1744264311434,
+    "rn": 466,
+    "sg": "2b2ec618394b99deea35104168b86381da9f8946d4bc234e062fa320155409fb",
+    "ct": 1744264311,
+    "ps": "b1b32fa07a65893cg017095",
+    "pc": "30732cc07a65893cg019b2f",
+    "s": "36cc0815"
 }
 
 
