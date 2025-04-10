@@ -52,7 +52,7 @@ def get_wr_skey():
 
 
 data = random.choice(dataArray)
-logging.info(f"✅ 阅读数据：data")
+logging.info(f"✅ 阅读数据：{data}")
 
 index = 1
 while index <= READ_NUM:
