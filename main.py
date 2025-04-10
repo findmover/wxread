@@ -8,7 +8,7 @@ import hashlib
 import requests
 import urllib.parse
 from push import push
-from config import data, headers, cookies, READ_NUM, PUSH_METHOD
+from config import dataArray, headers, cookies, READ_NUM, PUSH_METHOD
 
 # 配置日志格式
 logger = logging.getLogger(__name__)
@@ -50,6 +50,9 @@ def get_wr_skey():
             return cookie.split('=')[-1][:8]
     return None
 
+
+data = random.choice(dataArray)
+logging.info(f"✅ 阅读数据：data")
 
 index = 1
 while index <= READ_NUM:
