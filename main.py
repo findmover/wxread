@@ -8,7 +8,7 @@ import hashlib
 import requests
 import urllib.parse
 from push import push
-from config import dataArray, headers, cookies, READ_NUM, PUSH_METHOD
+from config import data, headers, cookies, READ_NUM, PUSH_METHOD, book, chapter
 
 # 配置日志格式
 logger = logging.getLogger(__name__)
@@ -55,7 +55,8 @@ def get_wr_skey():
 
 index = 1
 while index <= READ_NUM:
-    data = random.choice(dataArray)
+    data['b'] = random.choice(book)
+    data['c'] = random.choice(chapter)
     data['ct'] = int(time.time())
     data['ts'] = int(time.time() * 1000)
     data['rn'] = random.randint(0, 1000)
@@ -63,7 +64,6 @@ while index <= READ_NUM:
     data['s'] = cal_hash(encode_data(data))
 
     logging.info(f"⏱️ 尝试第 {index} 次阅读...")
-    logging.info(f"✅ 阅读数据：{data}")
     response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
     resData = response.json()
 
