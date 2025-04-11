@@ -63,7 +63,7 @@ for COOKIE_DATA in COOKIE_DATA_S:
         raise Exception(ERROR_CODE)
 
 index = 1
-lastTime = int(time.time())
+lastTime = int(time.time()) - 30
 while index <= READ_NUM:
     data['b'] = random.choice(book)
     data['c'] = random.choice(chapter)
