@@ -77,11 +77,14 @@ while index <= READ_NUM:
     data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
     data['s'] = cal_hash(encode_data(data))
 
+    if index == 1:
+        requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
+
     logging.info(f"⏱️ 尝试第 {index} 次阅读...")
-    logging.info(f"📕 data: {data} ...")
+    logging.info(f"📕 data: {data}")
     response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
     resData = response.json()
-    logging.info(f"📕 response: {resData} ...")
+    logging.info(f"📕 response: {resData}")
 
     if 'succ' in resData:
         lastTime = thisTime
