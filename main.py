@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)-8s - 
 
 # 加密盐及其它默认值
 KEY = "3c5c8717f3daf09iop3423zafeqoi"
-COOKIE_DATA_S = [{"rq": "%2Fweb%2Fbook%2Fread"},{rq: "%2Fweb%2Fbook%2Finfo"},{rq: "%2Fweb%2Fbook%2FchapterInfos"}]
+COOKIE_DATA_S = [{"rq": "%2Fweb%2Fbook%2Fread"},{"rq": "%2Fweb%2Fbook%2Finfo"},{"rq": "%2Fweb%2Fbook%2FchapterInfos"}]
 READ_URL = "https://weread.qq.com/web/book/read"
 RENEW_URL = "https://weread.qq.com/web/login/renewal"
 
