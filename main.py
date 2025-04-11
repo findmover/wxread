@@ -65,7 +65,7 @@ def refresh_cookie():
 refresh_cookie()
 
 index = 1
-lastTime = int(time.time()) - 30
+lastTime = int(time.time()) - 31
 while index <= READ_NUM:
     data['b'] = random.choice(book)
     data['c'] = random.choice(chapter)
@@ -76,10 +76,6 @@ while index <= READ_NUM:
     data['rn'] = random.randint(0, 1000)
     data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
     data['s'] = cal_hash(encode_data(data))
-
-    if index == 1:
-        logging.info(f"📕 第一次")
-        requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
 
     logging.info(f"⏱️ 尝试第 {index} 次阅读...")
     logging.info(f"📕 data: {data}")
