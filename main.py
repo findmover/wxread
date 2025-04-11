@@ -16,7 +16,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)-8s - 
 
 # 加密盐及其它默认值
 KEY = "3c5c8717f3daf09iop3423zafeqoi"
-COOKIE_DATA = {"rq": "%2Fweb%2Fbook%2Fread"}
+COOKIE_DATA_S = [{"rq": "%2Fweb%2Fbook%2Fread"},{rq: "%2Fweb%2Fbook%2Finfo"},{rq: "%2Fweb%2Fbook%2FchapterInfos"}]
 READ_URL = "https://weread.qq.com/web/book/read"
 RENEW_URL = "https://weread.qq.com/web/login/renewal"
 
@@ -41,7 +41,8 @@ def cal_hash(input_string):
     return hex(_7032f5 + _cc1055)[2:].lower()
 
 
-def get_wr_skey():
+def get_wr_skey(COOKIE_DATA):
+    logging.info(f"🍪 刷新cookie:{COOKIE_DATA}")
     """刷新cookie密钥"""
     response = requests.post(RENEW_URL, headers=headers, cookies=cookies,
                              data=json.dumps(COOKIE_DATA, separators=(',', ':')))
@@ -50,8 +51,17 @@ def get_wr_skey():
             return cookie.split('=')[-1][:8]
     return None
 
-
-
+logging.info(f"🍪 刷新cookie")
+for cookie in COOKIE_DATA:
+    new_skey = get_wr_skey(COOKIE_DATA)
+    if new_skey:
+        cookies['wr_skey'] = new_skey
+        logging.info(f"✅ 密钥刷新成功，新密钥：{new_skey}")
+    else:
+        ERROR_CODE = "❌ 无法获取新密钥或者WXREAD_CURL_BASH配置有误，终止运行。"
+        logging.error(ERROR_CODE)
+        push(ERROR_CODE, PUSH_METHOD)
+        raise Exception(ERROR_CODE)
 
 index = 1
 lastTime = int(time.time()) - 30
@@ -76,19 +86,8 @@ while index <= READ_NUM:
         index += 1
         time.sleep(30)
         logging.info(f"✅ 阅读成功，阅读进度：{(index - 1) * 0.5} 分钟")
-
     else:
-        logging.warning("❌ cookie 已过期，尝试刷新...")
-        new_skey = get_wr_skey()
-        if new_skey:
-            cookies['wr_skey'] = new_skey
-            logging.info(f"✅ 密钥刷新成功，新密钥：{new_skey}")
-            logging.info(f"🔄 重新本次阅读。")
-        else:
-            ERROR_CODE = "❌ 无法获取新密钥或者WXREAD_CURL_BASH配置有误，终止运行。"
-            logging.error(ERROR_CODE)
-            push(ERROR_CODE, PUSH_METHOD)
-            raise Exception(ERROR_CODE)
+        logging.info(f"🔄 阅读失败，重新本次阅读。")
     data.pop('s')
 
 logging.info("🎉 阅读脚本已完成！")
