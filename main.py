@@ -63,10 +63,10 @@ def refresh_cookie():
         raise Exception(ERROR_CODE)
 
 refresh_cookie()
-refresh_cookie()
 index = 1
 lastTime = int(time.time())
 while index <= READ_NUM:
+    data.pop('s')
     data['b'] = random.choice(book)
     data['c'] = random.choice(chapter)
     thisTime = int(time.time())
@@ -91,7 +91,6 @@ while index <= READ_NUM:
     else:
         logging.warning("❌ cookie 已过期，尝试刷新...")
         refresh_cookie()
-    data.pop('s')
 
 logging.info("🎉 阅读脚本已完成！")
 
