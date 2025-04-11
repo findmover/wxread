@@ -89,10 +89,13 @@ while index <= READ_NUM:
     logging.info(f"📕 response: {resData}")
 
     if 'succ' in resData:
-        lastTime = thisTime
-        index += 1
-        time.sleep(30)
-        logging.info(f"✅ 阅读成功，阅读进度：{(index - 1) * 0.5} 分钟")
+        if 'synckey' in resData:
+            lastTime = thisTime
+            index += 1
+            time.sleep(30)
+            logging.info(f"✅ 阅读成功，阅读进度：{(index - 1) * 0.5} 分钟")
+        else:
+            logging.warning("❌ 无synckey, 尝试修复...")
     else:
         logging.warning("❌ cookie 已过期，尝试刷新...")
         refresh_cookie()
