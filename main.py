@@ -19,6 +19,7 @@ KEY = "3c5c8717f3daf09iop3423zafeqoi"
 COOKIE_DATA = {"rq": "%2Fweb%2Fbook%2Fread"}
 READ_URL = "https://weread.qq.com/web/book/read"
 RENEW_URL = "https://weread.qq.com/web/login/renewal"
+FIX_SYNCKEY_URL = "https://weread.qq.com/web/book/chapterInfos"
 
 
 def encode_data(data):
@@ -48,6 +49,10 @@ def get_wr_skey():
         if "wr_skey" in cookie:
             return cookie.split('=')[-1][:8]
     return None
+
+def fix_no_synckey():
+    requests.post(FIX_SYNCKEY_URL, headers=headers, cookies=cookies,
+                             data=json.dumps({"bookIds":["3300060341"]}, separators=(',', ':')))
 
 def refresh_cookie():
     logging.info(f"🍪 刷新cookie")
