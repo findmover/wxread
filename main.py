@@ -63,6 +63,7 @@ def refresh_cookie():
         raise Exception(ERROR_CODE)
 
 refresh_cookie()
+refresh_cookie()
 index = 1
 lastTime = int(time.time())
 while index <= READ_NUM:
