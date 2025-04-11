@@ -81,6 +81,10 @@ while index <= READ_NUM:
     response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
     resData = response.json()
     logging.info(f"📕 response: {resData}")
+    if index == 1:
+        response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
+        resData = response.json()
+        logging.info(f"📕 response: {resData}")
 
     if 'succ' in resData:
         lastTime = thisTime
