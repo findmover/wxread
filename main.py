@@ -6,9 +6,10 @@ import random
 import logging
 import hashlib
 import requests
+import math
 import urllib.parse
 from push import push
-from config import data, headers, cookies, READ_NUM, PUSH_METHOD
+from config import data, chapters, cos, headers, cookies, READ_NUM, PUSH_METHOD
 
 # 配置日志格式
 logger = logging.getLogger(__name__)
@@ -50,9 +51,26 @@ def get_wr_skey():
             return cookie.split('=')[-1][:8]
     return None
 
-
 index = 1
-while index <= READ_NUM:
+# 随机选取一个章节开始
+chapter_cursor = random.randint(0, len(chapters) - 1)
+co_cursor = 0
+while index < READ_NUM:
+
+    chapter = chapters[chapter_cursor]
+    data['ci'] = chapter[0]
+    data['c'] = chapter[1]
+    data['pr'] = chapter[2]
+    data['co'] = cos[co_cursor]
+
+    # 章节内页数位置（即参数co）遍历，遍历结束后切换章节
+    if co_cursor < len(cos)-1:
+        co_cursor += 1
+    else:
+        co_cursor = 0
+        chapter_cursor = (chapter_cursor + 1) % len(chapters)
+
+    data.pop('s')
     data['ct'] = int(time.time())
     data['ts'] = int(time.time() * 1000)
     data['rn'] = random.randint(0, 1000)
@@ -66,7 +84,7 @@ while index <= READ_NUM:
     if 'succ' in resData:
         index += 1
         time.sleep(30)
-        logging.info(f"✅ 阅读成功，阅读进度：{(index - 1) * 0.5} 分钟")
+        logging.info(f"✅ 阅读成功，阅读进度：{(index-1)*0.5} 分钟")
 
     else:
         logging.warning("❌ cookie 已过期，尝试刷新...")
@@ -80,10 +98,9 @@ while index <= READ_NUM:
             logging.error(ERROR_CODE)
             push(ERROR_CODE, PUSH_METHOD)
             raise Exception(ERROR_CODE)
-    data.pop('s')
 
 logging.info("🎉 阅读脚本已完成！")
 
 if PUSH_METHOD not in (None, ''):
     logging.info("⏱️ 开始推送...")
-    push(f"🎉 微信读书自动阅读完成！\n⏱️ 阅读时长：{(index - 1) * 0.5}分钟。", PUSH_METHOD)
+    push(f"🎉 自动阅读已完成！\n⏱️ 阅读时长：{(index - 1) * 0.5}分钟。", PUSH_METHOD)
