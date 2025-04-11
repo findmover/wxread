@@ -62,10 +62,10 @@ def refresh_cookie():
         push(ERROR_CODE, PUSH_METHOD)
         raise Exception(ERROR_CODE)
 
+refresh_cookie()
 index = 1
-lastTime = int(time.time()) - 30
+lastTime = int(time.time())
 while index <= READ_NUM:
-    refresh_cookie()
     data['b'] = random.choice(book)
     data['c'] = random.choice(chapter)
     thisTime = int(time.time())
