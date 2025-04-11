@@ -52,7 +52,7 @@ def get_wr_skey(COOKIE_DATA):
     return None
 
 logging.info(f"🍪 刷新cookie")
-for cookie in COOKIE_DATA:
+for COOKIE_DATA in COOKIE_DATA_S:
     new_skey = get_wr_skey(COOKIE_DATA)
     if new_skey:
         cookies['wr_skey'] = new_skey
