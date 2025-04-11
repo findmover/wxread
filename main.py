@@ -78,6 +78,7 @@ while index <= READ_NUM:
     data['s'] = cal_hash(encode_data(data))
 
     if index == 1:
+        logging.info(f"📕 第一次")
         requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
 
     logging.info(f"⏱️ 尝试第 {index} 次阅读...")
