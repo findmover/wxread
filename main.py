@@ -51,7 +51,6 @@ def get_wr_skey(COOKIE_DATA):
             return cookie.split('=')[-1][:8]
     return None
 
-logging.info(f"🍪 刷新cookie")
 for COOKIE_DATA in COOKIE_DATA_S:
     new_skey = get_wr_skey(COOKIE_DATA)
     if new_skey:
@@ -64,14 +63,13 @@ for COOKIE_DATA in COOKIE_DATA_S:
         raise Exception(ERROR_CODE)
 
 index = 1
-lastTime = int(time.time()) - 30
+lastTime = int(time.time())
 while index <= READ_NUM:
     data['b'] = random.choice(book)
     data['c'] = random.choice(chapter)
     thisTime = int(time.time())
     data['ct'] = thisTime
     data['rt'] = thisTime - lastTime
-    lastTime = thisTime
     data['ts'] = int(thisTime * 1000) + random.randint(0, 1000)
     data['rn'] = random.randint(0, 1000)
     data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
@@ -83,6 +81,7 @@ while index <= READ_NUM:
     resData = response.json()
 
     if 'succ' in resData:
+        lastTime = thisTime
         index += 1
         time.sleep(30)
         logging.info(f"✅ 阅读成功，阅读进度：{(index - 1) * 0.5} 分钟")
