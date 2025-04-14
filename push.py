@@ -1,11 +1,11 @@
-# push.py 支持 PushPlus 、wxpusher、Telegram 的消息推送模块
+# push.py 支持 PushPlus 、wxpusher、Telegram、Server酱³ 的消息推送模块
 import os
 import random
 import time
 import json
 import requests
 import logging
-from config import PUSHPLUS_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_BOT_TOKEN, WXPUSHER_SPT
+from config import PUSHPLUS_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_BOT_TOKEN, WXPUSHER_SPT, SC3_SENDKEY, SC3_UID
 
 logger = logging.getLogger(__name__)
 
@@ -14,6 +14,7 @@ class PushNotification:
     def __init__(self):
         self.pushplus_url = "https://www.pushplus.plus/send"
         self.telegram_url = "https://api.telegram.org/bot{}/sendMessage"
+        self.sc3_url = "https://{}.push.ft07.com/send/{}.send"
         self.headers = {'Content-Type': 'application/json'}
         # 从环境变量获取代理设置
         self.proxies = {
@@ -87,17 +88,44 @@ class PushNotification:
                     logger.info("将在 %d 秒后重试...", sleep_time)
                     time.sleep(sleep_time)
 
+    def push_sc3(self, content, sendkey, uid=None):
+        """Server酱³消息推送"""
+        attempts = 5
+        
+        if uid:
+            url = self.sc3_url.format(uid, sendkey)
+            params = {
+                "title": "微信阅读推送...",
+                "desp": content
+            }
+            for attempt in range(attempts):
+                try:
+                    response = requests.get(url, params=params, timeout=10)
+                    response.raise_for_status()
+                    logger.info("✅ Server酱³响应: %s", response.text)
+                    break  # 成功推送，跳出循环
+                except requests.exceptions.RequestException as e:
+                    logger.error("❌ Server酱³推送失败: %s", e)
+                    if attempt < attempts - 1:  # 如果不是最后一次尝试
+                        sleep_time = random.randint(180, 360)  # 随机3到6分钟
+                        logger.info("将在 %d 秒后重试...", sleep_time)
+                        time.sleep(sleep_time)
+        else:
+            logger.error("❌ SC3_UID未配置，无法使用Server酱³推送。请在config.py或环境变量中设置SC3_UID。")
+            return False
 
 """外部调用"""
 
 
 def push(content, method):
-    """统一推送接口，支持 PushPlus、Telegram 和 WxPusher"""
+    """统一推送接口，支持 PushPlus、Telegram 和 WxPusher, Server酱³(SendKey)"""
     notifier = PushNotification()
 
     if method == "pushplus":
         token = PUSHPLUS_TOKEN
         return notifier.push_pushplus(content, token)
+    elif method == "sc3":
+        return notifier.push_sc3(content, SC3_SENDKEY, SC3_UID)
     elif method == "telegram":
         bot_token = TELEGRAM_BOT_TOKEN
         chat_id = TELEGRAM_CHAT_ID
@@ -105,4 +133,4 @@ def push(content, method):
     elif method == "wxpusher":
         return notifier.push_wxpusher(content, WXPUSHER_SPT)
     else:
-        raise ValueError("❌ 无效的通知渠道，请选择 'pushplus'、'telegram' 或 'wxpusher'")
+        raise ValueError("❌ 无效的通知渠道，请选择 'pushplus'、'telegram'、'wxpusher' 或 'sc3'")

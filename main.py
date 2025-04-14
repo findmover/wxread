@@ -70,6 +70,7 @@ def refresh_cookie():
 refresh_cookie()
 index = 1
 lastTime = int(time.time()) - 30
+logging.info(f"计划阅读次数{READ_NUM}")
 while index <= READ_NUM:
     data.pop('s')
     data['b'] = random.choice(book)

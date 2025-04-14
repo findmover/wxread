@@ -1,15 +1,23 @@
 # config.py 自定义配置,包括阅读次数、推送token的填写
 import os
 import re
+import random
+from dotenv import load_dotenv
+
+# 加载 .env 文件
+try:
+    load_dotenv()
+except Exception as e:
+    print(f"加载 .env 文件时出错: {e}")
 
 """
 可修改区域
 默认使用本地值如果不存在从环境变量中获取值
 """
 
-# 阅读次数 默认40次/20分钟
-READ_NUM = int(os.getenv('READ_NUM') or 40)
-# 需要推送时可选，可选pushplus、wxpusher、telegram
+# 阅读次数 随机40-70次
+READ_NUM = int(os.getenv('READ_NUM') or random.randint(40, 70))
+# 需要推送时可选，可选pushplus、wxpusher、telegram、sc3
 PUSH_METHOD = "" or os.getenv('PUSH_METHOD')
 # pushplus推送时需填
 PUSHPLUS_TOKEN = "" or os.getenv("PUSHPLUS_TOKEN")
@@ -18,6 +26,11 @@ TELEGRAM_BOT_TOKEN = "" or os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = "" or os.getenv("TELEGRAM_CHAT_ID")
 # wxpusher推送时需填
 WXPUSHER_SPT = "" or os.getenv("WXPUSHER_SPT")
+# Server酱³(SendKey)推送时需填
+SC3_SENDKEY = "" or os.getenv("SC3_SENDKEY")
+# Server酱³(UID)推送时需填
+SC3_UID = "" or os.getenv("SC3_UID")
+
 # read接口的bash命令，本地部署时可对应替换headers、cookies
 curl_str = os.getenv('WXREAD_CURL_BASH')
 
