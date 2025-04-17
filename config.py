@@ -8,20 +8,20 @@ import re
 """
 
 # 阅读次数 默认40次/20分钟
-READ_NUM = int(os.getenv('READ_NUM') 或 40)
+READ_NUM = int(os.getenv('READ_NUM') or 40)
 # 需要推送时可选，可选pushplus、wxpusher、telegram
-PUSH_METHOD = "" 或 os.getenv('PUSH_METHOD')
+PUSH_METHOD = "" or os.getenv('PUSH_METHOD')
 # pushplus推送时需填
-PUSHPLUS_TOKEN = "" 或 os.getenv("PUSHPLUS_TOKEN")
+PUSHPLUS_TOKEN = "" or os.getenv("PUSHPLUS_TOKEN")
 # telegram推送时需填
-TELEGRAM_BOT_TOKEN = "" 或 os.getenv("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = "" 或 os.getenv("TELEGRAM_CHAT_ID")
+TELEGRAM_BOT_TOKEN = "" or os.getenv("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = "" or os.getenv("TELEGRAM_CHAT_ID")
 # wxpusher推送时需填
-WXPUSHER_SPT = "" 或 os.getenv("WXPUSHER_SPT")
+WXPUSHER_SPT = "" or os.getenv("WXPUSHER_SPT")
 # read接口的bash命令，本地部署时可对应替换headers、cookies
 curl_str = os.getenv('WXREAD_CURL_BASH')
 
-# headers、cookies是一个省略模版，本地或者docker部署时对应替换
+# headers、cookies是一个省略模版，本地or者docker部署时对应替换
 cookies = {
     'RK': 'oxEY1bTnXf',
     'ptcz': '53e3b35a9486dd63c4d06430b05aa169402117fc407dc5cc9329b41e59f62e2b',
