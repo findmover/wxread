@@ -10,7 +10,7 @@ on:
     #- cron: '40 3 * * *'
     # 晚间任务：北京时间每天 22:00（UTC 14:00）
     #- cron: '0 14 * * *'
-    - cron: '20 10 * * *'
+    - cron: '30 10 * * *'
   workflow_dispatch:  # 手动触发
 
 jobs:
