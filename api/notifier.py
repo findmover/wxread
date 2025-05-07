@@ -1,12 +1,8 @@
-import asyncio
-import hashlib
 import json
 import os
 import random
-import re
 import time
-import urllib.parse
-from typing import Callable
+from typing import Callable, Literal
 
 import requests
 from loguru import logger
@@ -21,8 +17,8 @@ class PushPlusNotifier:
         self,
         content,
         attempt_times: int = 5,
-        onSuccess: Callable = logger.debug,
-        onRefresh: Callable = logger.info,
+        onSuccess: Callable = logger.success,
+        onDebug: Callable = logger.debug,
         onFail: Callable = logger.error,
     ):
         """PushPlus消息推送"""
@@ -48,7 +44,7 @@ class PushPlusNotifier:
                 onFail(f"❌ PushPlus推送失败: {e}")
                 if attempt < attempt_times - 1:
                     sleep_time = random.randint(180, 360)
-                    onRefresh(f"将在 {sleep_time} 秒后重试...")
+                    onDebug(f"将在 {sleep_time} 秒后重试...")
                     time.sleep(sleep_time)
 
 
@@ -64,7 +60,7 @@ class TelegramNotifier:
     def push(
         self,
         content,
-        onSuccess: Callable = logger.debug,
+        onSuccess: Callable = logger.success,
         onFail: Callable = logger.error,
     ):
         """Telegram消息推送，失败时自动尝试直连"""
@@ -101,8 +97,8 @@ class WxPusherNotifier:
         self,
         content,
         attempt_times: int = 5,
-        onSuccess: Callable = logger.debug,
-        onRefresh: Callable = logger.info,
+        onSuccess: Callable = logger.success,
+        onDebug: Callable = logger.debug,
         onFail: Callable = logger.error,
     ):
         """WxPusher消息推送（极简方式）"""
@@ -118,25 +114,49 @@ class WxPusherNotifier:
                 onFail(f"❌ WxPusher推送失败: {e}")
                 if attempt < attempt_times - 1:
                     sleep_time = random.randint(180, 360)
-                    onRefresh(f"将在 {sleep_time} 秒后重试...")
+                    onDebug(f"将在 {sleep_time} 秒后重试...")
                     time.sleep(sleep_time)
 
 
-# 外部调用
-def push(content, method, config):
-    """统一推送接口，支持 PushPlus、Telegram 和 WxPusher"""
-    if method == "pushplus":
-        notifier = PushPlusNotifier(config["PUSHPLUS_TOKEN"])
-        return notifier.push(content)
-    elif method == "telegram":
-        notifier = TelegramNotifier(
-            config["TELEGRAM_BOT_TOKEN"], config["TELEGRAM_CHAT_ID"]
-        )
-        return notifier.push(content)
-    elif method == "wxpusher":
-        notifier = WxPusherNotifier(config["WXPUSHER_SPT"])
-        return notifier.push(content)
-    else:
-        raise ValueError(
-            "❌ 无效的通知渠道，请选择 'pushplus'、'telegram' 或 'wxpusher'"
-        )
+class Notifier:
+    def __init__(self, method: Literal["pushplus", "telegram", "wxpusher"], config):
+        if method == "pushplus":
+            self.notifier = PushPlusNotifier(config["PUSHPLUS_TOKEN"])
+        elif method == "telegram":
+            self.notifier = TelegramNotifier(
+                config["TELEGRAM_BOT_TOKEN"], config["TELEGRAM_CHAT_ID"]
+            )
+        elif method == "wxpusher":
+            self.notifier = WxPusherNotifier(config["WXPUSHER_SPT"])
+        else:
+            raise ValueError(
+                "❌ 无效的通知渠道，请选择 'pushplus'、'telegram' 或 'wxpusher'"
+            )
+
+    def push(self, content):
+        """统一推送接口，支持 PushPlus、Telegram 和 WxPusher"""
+        return self.notifier.push(content)
+
+    def onStart(self, msg):
+        logger.info(msg)
+        self.push(msg)
+
+    def onSuccess(self, msg):
+        logger.success(msg)
+        self.push(msg)
+
+    def onFail(self, msg):
+        logger.error(msg)
+        self.push(msg)
+
+    def onDebug(self, msg):
+        logger.debug(msg)
+        self.push(msg)
+
+    def onWarning(self, msg):
+        logger.warning(msg)
+        self.push(msg)
+
+    def onFinish(self, msg):
+        logger.info(msg)
+        self.push(msg)
