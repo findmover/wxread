@@ -48,8 +48,6 @@ if PUSH_METHOD and has_valid_push_token(PUSH_METHOD):
         reader.sync_run(
             loop_num=READ_NUM,
             onStart=notifier.onStart,
-            onSuccess=notifier.onSuccess,
-            onDebug=notifier.onDebug,
             onFail=notifier.onFail,
             onFinish=notifier.onFinish,
         )
