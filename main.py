@@ -44,10 +44,10 @@ if PUSH_METHOD and has_valid_push_token(PUSH_METHOD):
             "WXPUSHER_SPT": WXPUSHER_SPT,
         },
     )
+    notifier.onStart(f"📕 开始阅读，共{ READ_NUM/2 }分钟")
     asyncio.run(
         reader.sync_run(
             loop_num=READ_NUM,
-            onStart=notifier.onStart,
             onFail=notifier.onFail,
             onFinish=notifier.onFinish,
         )
