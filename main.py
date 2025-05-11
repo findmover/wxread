@@ -4,8 +4,8 @@ import os
 from api.notifier import Notifier
 from api.reader import WXReader
 
-# 阅读次数 默认40次/20分钟
-READ_NUM = int(os.getenv("READ_NUM") or 40)
+# 阅读时长，单位分钟，默认60分钟
+READ_MINUTE = int(os.getenv("READ_MINUTE") or 60)
 # 需要推送时可选，可选pushplus、wxpusher、telegram
 PUSH_METHOD = os.getenv("PUSH_METHOD")
 # pushplus推送时需填
@@ -44,14 +44,14 @@ if PUSH_METHOD and has_valid_push_token(PUSH_METHOD):
             "WXPUSHER_SPT": WXPUSHER_SPT,
         },
     )
-    notifier.onStart(f"📕 开始阅读，共{ READ_NUM/2 }分钟")
+    notifier.onStart(f"📕 开始阅读，共{ READ_MINUTE }分钟")
     asyncio.run(
         reader.sync_run(
-            loop_num=READ_NUM,
+            loop_num=READ_MINUTE * 2,
             onFail=notifier.onFail,
             onFinish=notifier.onFinish,
         )
     )
 else:
     # 如果没有有效的推送 token，则直接运行阅读逻辑
-    asyncio.run(reader.sync_run(loop_num=READ_NUM))
+    asyncio.run(reader.sync_run(loop_num=READ_MINUTE * 2))
