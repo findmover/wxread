@@ -4,8 +4,10 @@ on:
   schedule:
     # 凌晨任务：北京时间每天 01:00（UTC 前一天 17:00）
     - cron: '0 17 * * *'
+    - cron: '0 18 * * *'
+    - cron: '0 19 * * *'
     # 早间任务：北京时间每天 05:00（UTC 前一天 21:00）
-    #- cron: '0 21 * * *'
+    # - cron: '0 21 * * *'
     # 午间任务：北京时间每天 11:40（UTC 03:40）
     #- cron: '40 3 * * *'
     # 晚间任务：北京时间每天 22:00（UTC 14:00）
@@ -27,15 +29,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.10'
-
-    - name: Install dependencies
+    - name: Install UV
       run: |
-        python -m pip install --upgrade pip
-        pip install certifi==2024.8.30 charset-normalizer==3.4.0 idna==3.10 requests==2.32.3 urllib3==2.2.3
+        powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+    - name: Sync dependencies with UV
+      run: uv sync
 
     - name: Run deployment script
       env:
@@ -48,4 +47,4 @@ jobs:
         READ_NUM: ${{ vars.READ_NUM }}  # 使用 Repository Variables
 
       run: |
-        python main.py
+        uv run main.py
