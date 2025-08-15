@@ -49,10 +49,12 @@ jobs:
 
       run: |
         python main.py
-  workflow-keepalive:
-    if: github.event_name == 'schedule'
+        
+  keepalive-job:
+    name: Keepalive Workflow
     runs-on: ubuntu-latest
     permissions:
       actions: write
     steps:
-      - uses: liskin/gh-workflow-keepalive@v1
+      - uses: actions/checkout@v4
+      - uses: gautamkrishnar/keepalive-workflow@v2
