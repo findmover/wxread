@@ -49,3 +49,13 @@ jobs:
 
       run: |
         python main.py
+        
+  keepalive-job:
+    name: Keepalive Workflow
+    if: ${{ always() }}
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - uses: liskin/gh-workflow-keepalive@v1
