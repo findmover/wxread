@@ -18,6 +18,8 @@ jobs:
   deploy:
     runs-on: ubuntu-22.04
     environment: AutoRead  # 指定环境
+    env:
+      PYTHONIOENCODING: utf-8  # 强制 Python 使用 UTF-8 编码
 
     steps:
 
@@ -25,14 +27,15 @@ jobs:
       run: |
         echo "nameserver 8.8.8.8" | sudo tee /etc/resolv.conf
         echo "nameserver 8.8.4.4" | sudo tee -a /etc/resolv.conf
-
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
+    
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
     - name: Install UV
       run: |
-        powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+        curl -LsSf https://astral.sh/uv/install.sh | sh
 
+        
     - name: Sync dependencies with UV
       run: uv sync
 
@@ -46,5 +49,4 @@ jobs:
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         READ_NUM: ${{ vars.READ_NUM }}  # 使用 Repository Variables
 
-      run: |
-        uv run main.py
+      run: uv run main.py
