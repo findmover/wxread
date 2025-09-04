@@ -49,6 +49,7 @@ jobs:
         WXPUSHER_SPT: ${{ secrets.WXPUSHER_SPT }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        SERVERCHAN_SPT:  ${{ secrets.SERVERCHAN_SPT }}
         READ_NUM: ${{ vars.READ_NUM }}  # 使用 Repository Variables
 
       run: |
@@ -62,4 +63,4 @@ jobs:
     permissions:
       actions: write
     steps:
-      - uses: liskin/gh-workflow-keepalive@v1
+      - uses: liskin/gh-workflow-keepalive@v1.2.1

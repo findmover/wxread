@@ -5,7 +5,7 @@ import time
 import json
 import requests
 import logging
-from config import PUSHPLUS_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_BOT_TOKEN, WXPUSHER_SPT
+from config import PUSHPLUS_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_BOT_TOKEN, WXPUSHER_SPT,SERVERCHAN_SPT
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +20,7 @@ class PushNotification:
             'http': os.getenv('http_proxy'),
             'https': os.getenv('https_proxy')
         }
+        self.server_chan_url = "https://sctapi.ftqq.com/{}.send"
         self.wxpusher_simple_url = "https://wxpusher.zjiecode.com/api/send/message/{}/{}"
 
     def push_pushplus(self, content, token):
@@ -87,6 +88,37 @@ class PushNotification:
                     logger.info("将在 %d 秒后重试...", sleep_time)
                     time.sleep(sleep_time)
 
+    def push_serverChan(self, content, spt):
+        """ServerChan消息推送"""
+        attempts = 5
+        url = self.server_chan_url.format(spt)
+        
+       
+        title = "微信阅读推送..." 
+        if not "自动阅读完成" in content:
+            title = "微信阅读失败！！" 
+      
+        for attempt in range(attempts):
+            try:
+                response = requests.post(
+                    url,
+                    data=json.dumps({
+                        "title": title,
+                        "desp": content
+                    }).encode('utf-8'),
+                    headers=self.headers,
+                    timeout=10
+                )
+                response.raise_for_status()
+                logger.info("✅ ServerChan响应: %s", response.text)
+                break
+            except requests.exceptions.RequestException as e:
+                logger.error("❌ ServerChan推送失败: %s", e)
+                if attempt < attempts - 1:
+                    sleep_time = random.randint(180, 360)
+                    logger.info("将在 %d 秒后重试...", sleep_time)
+                    time.sleep(sleep_time)
+
 
 """外部调用"""
 
@@ -104,5 +136,7 @@ def push(content, method):
         return notifier.push_telegram(content, bot_token, chat_id)
     elif method == "wxpusher":
         return notifier.push_wxpusher(content, WXPUSHER_SPT)
+    elif method == "serverchan":
+        return notifier.push_serverChan(content, SERVERCHAN_SPT)
     else:
         raise ValueError("❌ 无效的通知渠道，请选择 'pushplus'、'telegram' 或 'wxpusher'")
