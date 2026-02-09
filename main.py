@@ -54,20 +54,57 @@ def fix_no_synckey():
     requests.post(FIX_SYNCKEY_URL, headers=headers, cookies=cookies,
                              data=json.dumps({"bookIds":["3300060341"]}, separators=(',', ':')))
 
+def test_cookie_valid():
+    """使用 read 接口测试 cookie 是否有效"""
+    test_data = data.copy()
+    test_data.pop('s', None)
+    test_data['b'] = random.choice(book)
+    test_data['c'] = random.choice(chapter)
+    test_data['ct'] = int(time.time())
+    test_data['rt'] = 30
+    test_data['ts'] = int(test_data['ct'] * 1000) + random.randint(0, 1000)
+    test_data['rn'] = random.randint(0, 1000)
+    test_data['sg'] = hashlib.sha256(f"{test_data['ts']}{test_data['rn']}{KEY}".encode()).hexdigest()
+    test_data['s'] = cal_hash(encode_data(test_data))
+
+    try:
+        response = requests.post(READ_URL, headers=headers, cookies=cookies,
+                                 data=json.dumps(test_data, separators=(',', ':')).encode('utf-8'), timeout=10)
+        res_data = response.json()
+        return 'succ' in res_data
+    except Exception as e:
+        logging.error(f"测试 cookie 失败: {e}")
+        return False
+
 def refresh_cookie():
+    """刷新 cookie，如果 renewal 失败则尝试直接测试 read 接口"""
     logging.info(f"🍪 刷新cookie")
+
+    # 首先尝试 renewal 接口
     new_skey = get_wr_skey()
     if new_skey:
         cookies['wr_skey'] = new_skey
         logging.info(f"✅ 密钥刷新成功，新密钥：{new_skey}")
-        logging.info(f"🔄 重新本次阅读。")
-    else:
-        ERROR_CODE = "❌ 无法获取新密钥或者WXREAD_CURL_BASH配置有误，终止运行。"
-        logging.error(ERROR_CODE)
-        push(ERROR_CODE, PUSH_METHOD)
-        raise Exception(ERROR_CODE)
+        return True
 
-refresh_cookie()
+    # 如果 renewal 失败，测试 read 接口是否可用
+    logging.info("🔄 renewal 接口失败，尝试直接测试 read 接口...")
+    if test_cookie_valid():
+        logging.info("✅ read 接口可用，继续阅读")
+        return True
+
+    ERROR_CODE = "❌ 无法获取新密钥或者WXREAD_CURL_BASH配置有误，终止运行。"
+    logging.error(ERROR_CODE)
+    push(ERROR_CODE, PUSH_METHOD)
+    raise Exception(ERROR_CODE)
+
+# 初始验证 cookie
+logging.info("🍪 验证 cookie 有效性...")
+if not test_cookie_valid():
+    logging.warning("⚠️ 初始 cookie 可能已过期，尝试刷新...")
+    refresh_cookie()
+else:
+    logging.info("✅ cookie 有效，开始阅读")
 index = 1
 lastTime = int(time.time()) - 30
 logging.info(f"⏱️ 一共需要阅读 {READ_NUM} 次...")
@@ -86,7 +123,8 @@ while index <= READ_NUM:
 
     logging.info(f"⏱️ 尝试第 {index} 次阅读...")
     logging.info(f"📕 data: {data}")
-    response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
+    response = requests.post(READ_URL, headers=headers, cookies=cookies,
+                             data=json.dumps(data, separators=(',', ':')).encode('utf-8'), timeout=30)
     resData = response.json()
     logging.info(f"📕 response: {resData}")
 
@@ -101,7 +139,9 @@ while index <= READ_NUM:
             fix_no_synckey()
     else:
         logging.warning("❌ cookie 已过期，尝试刷新...")
-        refresh_cookie()
+        if not refresh_cookie():
+            logging.error("❌ 刷新失败，终止运行")
+            break
 
 logging.info("🎉 阅读脚本已完成！")
 

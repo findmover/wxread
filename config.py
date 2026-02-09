@@ -20,6 +20,9 @@ TELEGRAM_CHAT_ID = "" or os.getenv("TELEGRAM_CHAT_ID")
 WXPUSHER_SPT = "" or os.getenv("WXPUSHER_SPT")
 # SeverChan推送时需填
 SERVERCHAN_SPT = "" or os.getenv("SERVERCHAN_SPT")
+# Gotify推送时需填
+GOTIFY_URL = "" or os.getenv("GOTIFY_URL")
+GOTIFY_TOKEN = "" or os.getenv("GOTIFY_TOKEN")
 
 
 # read接口的bash命令，本地部署时可对应替换headers、cookies

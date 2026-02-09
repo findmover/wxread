@@ -1,11 +1,11 @@
-# push.py 支持 PushPlus 、wxpusher、Telegram 的消息推送模块
+# push.py 支持 PushPlus 、wxpusher、Telegram、ServerChan、Gotify 的消息推送模块
 import os
 import random
 import time
 import json
 import requests
 import logging
-from config import PUSHPLUS_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_BOT_TOKEN, WXPUSHER_SPT,SERVERCHAN_SPT
+from config import PUSHPLUS_TOKEN, TELEGRAM_CHAT_ID, TELEGRAM_BOT_TOKEN, WXPUSHER_SPT, SERVERCHAN_SPT, GOTIFY_URL, GOTIFY_TOKEN
 
 logger = logging.getLogger(__name__)
 
@@ -119,12 +119,46 @@ class PushNotification:
                     logger.info("将在 %d 秒后重试...", sleep_time)
                     time.sleep(sleep_time)
 
+    def push_gotify(self, content, gotify_url, token):
+        """Gotify消息推送"""
+        attempts = 5
+        url = f"{gotify_url}/message"
+        
+        title = "微信阅读推送..." 
+        if "自动阅读完成" not in content:
+            title = "微信阅读失败！！" 
+        
+        for attempt in range(attempts):
+            try:
+                response = requests.post(
+                    url,
+                    data=json.dumps({
+                        "title": title,
+                        "message": content,
+                        "priority": 5
+                    }).encode('utf-8'),
+                    headers={
+                        'Content-Type': 'application/json',
+                        'X-Gotify-Key': token
+                    },
+                    timeout=10
+                )
+                response.raise_for_status()
+                logger.info("✅ Gotify响应: %s", response.text)
+                break
+            except requests.exceptions.RequestException as e:
+                logger.error("❌ Gotify推送失败: %s", e)
+                if attempt < attempts - 1:
+                    sleep_time = random.randint(180, 360)
+                    logger.info("将在 %d 秒后重试...", sleep_time)
+                    time.sleep(sleep_time)
+
 
 """外部调用"""
 
 
 def push(content, method):
-    """统一推送接口，支持 PushPlus、Telegram 和 WxPusher"""
+    """统一推送接口，支持 PushPlus、Telegram、WxPusher、ServerChan 和 Gotify"""
     notifier = PushNotification()
 
     if method == "pushplus":
@@ -138,5 +172,7 @@ def push(content, method):
         return notifier.push_wxpusher(content, WXPUSHER_SPT)
     elif method == "serverchan":
         return notifier.push_serverChan(content, SERVERCHAN_SPT)
+    elif method == "gotify":
+        return notifier.push_gotify(content, GOTIFY_URL, GOTIFY_TOKEN)
     else:
-        raise ValueError("❌ 无效的通知渠道，请选择 'pushplus'、'telegram' 或 'wxpusher'")
+        raise ValueError("❌ 无效的通知渠道，请选择 'pushplus'、'telegram'、'wxpusher'、'serverchan' 或 'gotify'")
