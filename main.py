@@ -6,6 +6,7 @@ import logging
 import hashlib
 import requests
 import urllib.parse
+import re
 from push import push
 from log_utils import setup_logging
 from config import data, headers, cookies, READ_NUM, PUSH_METHOD, book, chapter
@@ -38,18 +39,37 @@ def cal_hash(input_string):
 
     return hex(_7032f5 + _cc1055)[2:].lower()
 
+def extract_wr_skey(response):
+    """优先从响应cookie容器提取wr_skey，兼容多个Set-Cookie头"""
+    wr_skey = response.cookies.get('wr_skey')
+    if wr_skey:
+        return wr_skey[:8]
+
+    match = re.search(r"(?:^|,)\s*wr_skey=([^;,\s]*)", response.headers.get('Set-Cookie', ''))
+    if match and match.group(1):
+        return match.group(1)[:8]
+    return None
+
 def get_wr_skey():
     """刷新cookie密钥"""
     for cookie_data in COOKIE_DATA_VARIANTS:
         try:
-            response = requests.post(RENEW_URL,headers=headers,cookies=cookies,data=json.dumps(cookie_data, separators=(',', ':')))
+            response = requests.post(RENEW_URL, headers=headers, cookies=cookies, data=json.dumps(cookie_data, separators=(',', ':')))
         except requests.RequestException as exc:
             logging.warning(f"refresh_cookie 请求失败，payload={cookie_data}，原因：{exc}")
             continue
 
-        for cookie in response.headers.get('Set-Cookie', '').split(';'):
-            if "wr_skey" in cookie:
-                return cookie.split('=')[-1][:8]
+        new_skey = extract_wr_skey(response)
+        if new_skey:
+            return new_skey
+
+        response_summary = response.text.strip().replace('\n', ' ')[:200]
+        logging.warning(
+            "refresh_cookie 未返回 wr_skey，payload=%s，status=%s，body=%s",
+            cookie_data,
+            response.status_code,
+            response_summary,
+        )
     return None
 
 def fix_no_synckey():
@@ -57,7 +77,7 @@ def fix_no_synckey():
 
 refresh_print = setup_logging()
 
-def refresh_cookie():
+def refresh_cookie(strict=True):
     logging.info("刷新 cookie")
     new_skey = get_wr_skey()
     if new_skey:
@@ -66,11 +86,13 @@ def refresh_cookie():
         logging.info("重新本次阅读。")
     else:
         ERROR_CODE = "无法获取新密钥或者 WXREAD_CURL_BASH 配置有误，终止运行。"
-        logging.error(ERROR_CODE)
-        push(ERROR_CODE, PUSH_METHOD)
-        raise Exception(ERROR_CODE)
+        if strict:
+            logging.error(ERROR_CODE)
+            push(ERROR_CODE, PUSH_METHOD)
+            raise Exception(ERROR_CODE)
+        logging.warning("启动阶段刷新失败，保留现有 cookie 继续尝试阅读。")
 
-refresh_cookie()
+refresh_cookie(strict=False)
 index = 1
 lastTime = int(time.time()) - 30
 logging.info(f"一共需要阅读 {READ_NUM} 次。")
@@ -103,6 +125,11 @@ while index <= READ_NUM:
             logging.warning("无 synckey，尝试修复...")
             fix_no_synckey()
     else:
+        logging.warning(
+            "read 接口返回异常，status=%s，body=%s",
+            response.status_code,
+            response.text.strip().replace('\n', ' ')[:200],
+        )
         logging.warning("cookie 已过期，尝试刷新...")
         refresh_cookie()
 
