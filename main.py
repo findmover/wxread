@@ -42,7 +42,7 @@ def get_wr_skey():
     """刷新cookie密钥"""
     for cookie_data in COOKIE_DATA_VARIANTS:
         try:
-            response = requests.post(RENEW_URL,headers=headers,cookies=cookies,data=json.dumps(cookie_data, separators=(',', ':')),timeout=10)
+            response = requests.post(RENEW_URL,headers=headers,cookies=cookies,data=json.dumps(cookie_data, separators=(',', ':')))
         except requests.RequestException as exc:
             logging.warning(f"refresh_cookie 请求失败，payload={cookie_data}，原因：{exc}")
             continue
