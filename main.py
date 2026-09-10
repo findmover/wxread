@@ -17,6 +17,7 @@ READ_URL = "https://weread.qq.com/web/book/read"
 RENEW_URL = "https://weread.qq.com/web/login/renewal"
 FIX_SYNCKEY_URL = "https://weread.qq.com/web/book/chapterInfos"
 COOKIE_DATA_VARIANTS = [{"rq": "%2Fweb%2Fbook%2Fread", "ql": False},{"rq": "%2Fweb%2Fbook%2Fread", "ql": True},{"rq": "%2Fweb%2Fbook%2Fread"},]
+AUTH_ERROR_CODES = {-2012, -2013}
 
 
 def encode_data(data):
@@ -37,6 +38,7 @@ def cal_hash(input_string):
         _19094e -= 2
 
     return hex(_7032f5 + _cc1055)[2:].lower()
+
 
 def get_wr_skey():
     """刷新cookie密钥"""
@@ -68,7 +70,7 @@ def refresh_cookie():
         logging.info(f"密钥刷新成功，新密钥：{new_skey[:2]}***")
         logging.info("重新本次阅读。")
     else:
-        ERROR_CODE = "无法获取新密钥或者 WXREAD_CURL_BASH 配置有误，终止运行。"
+        ERROR_CODE = "无法获取新密钥，当前登录状态可能已失效，终止运行。"
         logging.error(ERROR_CODE)
         push(ERROR_CODE, PUSH_METHOD, is_success=False)
         raise Exception(ERROR_CODE)
@@ -93,7 +95,15 @@ while index <= READ_NUM:
     refresh_print(f"阅读进度: 第 {index}/{READ_NUM} 次，已完成 {(index - 1) * 0.5:.1f} 分钟")
     logging.debug("data: %s", data)
     response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
-    resData = response.json()
+
+    try:
+        resData = response.json()
+    except ValueError as exc:
+        ERROR_CODE = f"read 接口返回非 JSON 响应，HTTP {response.status_code}。"
+        logging.error(ERROR_CODE)
+        push(ERROR_CODE, PUSH_METHOD, is_success=False)
+        raise RuntimeError(ERROR_CODE) from exc
+
     logging.debug("response: %s", resData)
 
     if 'succ' in resData:
@@ -106,7 +116,19 @@ while index <= READ_NUM:
             logging.warning("无 synckey，尝试修复...")
             fix_no_synckey()
     else:
-        logging.warning("cookie 已过期，尝试刷新...")
+        err_code = resData.get('errCode')
+        err_msg = resData.get('errMsg')
+        logging.warning(
+            "read 接口返回异常：HTTP %s，errCode=%s，errMsg=%s",
+            response.status_code,
+            err_code,
+            err_msg,
+        )
+
+        if err_code in AUTH_ERROR_CODES:
+            logging.warning("检测到登录/鉴权异常，尝试刷新 cookie...")
+        else:
+            logging.warning("未识别为已知鉴权错误，保留现有刷新流程尝试恢复...")
         refresh_cookie()
 
 logging.info("阅读脚本已完成。")
