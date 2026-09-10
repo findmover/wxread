@@ -17,6 +17,9 @@ READ_URL = "https://weread.qq.com/web/book/read"
 RENEW_URL = "https://weread.qq.com/web/login/renewal"
 FIX_SYNCKEY_URL = "https://weread.qq.com/web/book/chapterInfos"
 COOKIE_DATA_VARIANTS = [{"rq": "%2Fweb%2Fbook%2Fread", "ql": False},{"rq": "%2Fweb%2Fbook%2Fread", "ql": True},{"rq": "%2Fweb%2Fbook%2Fread"},]
+REQUEST_TIMEOUT = (10, 30)
+SYNCKEY_REPAIR_LIMIT = 3
+SYNCKEY_REPAIR_DELAY = 5
 
 
 def encode_data(data):
@@ -42,7 +45,13 @@ def get_wr_skey():
     """刷新cookie密钥"""
     for cookie_data in COOKIE_DATA_VARIANTS:
         try:
-            response = requests.post(RENEW_URL,headers=headers,cookies=cookies,data=json.dumps(cookie_data, separators=(',', ':')),timeout=10)
+            response = requests.post(
+                RENEW_URL,
+                headers=headers,
+                cookies=cookies,
+                data=json.dumps(cookie_data, separators=(',', ':')),
+                timeout=REQUEST_TIMEOUT,
+            )
             
             if 'wr_skey' in response.cookies:
                 return response.cookies['wr_skey'][:8]
@@ -56,7 +65,14 @@ def get_wr_skey():
     return None
 
 def fix_no_synckey():
-    requests.post(FIX_SYNCKEY_URL, headers=headers, cookies=cookies,data=json.dumps({"bookIds":["3300060341"]}, separators=(',', ':')))
+    response = requests.post(
+        FIX_SYNCKEY_URL,
+        headers=headers,
+        cookies=cookies,
+        data=json.dumps({"bookIds":["3300060341"]}, separators=(',', ':')),
+        timeout=REQUEST_TIMEOUT,
+    )
+    response.raise_for_status()
 
 refresh_print = setup_logging()
 
@@ -76,6 +92,7 @@ def refresh_cookie():
 refresh_cookie()
 index = 1
 lastTime = int(time.time()) - 30
+synckey_repair_attempts = 0
 logging.info(f"一共需要阅读 {READ_NUM} 次。")
 
 while index <= READ_NUM:
@@ -92,19 +109,51 @@ while index <= READ_NUM:
 
     refresh_print(f"阅读进度: 第 {index}/{READ_NUM} 次，已完成 {(index - 1) * 0.5:.1f} 分钟")
     logging.debug("data: %s", data)
-    response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
-    resData = response.json()
+    try:
+        response = requests.post(
+            READ_URL,
+            headers=headers,
+            cookies=cookies,
+            data=json.dumps(data, separators=(',', ':')),
+            timeout=REQUEST_TIMEOUT,
+        )
+        resData = response.json()
+    except requests.RequestException as exc:
+        ERROR_CODE = f"阅读请求失败：{exc}"
+        logging.error(ERROR_CODE)
+        push(ERROR_CODE, PUSH_METHOD, is_success=False)
+        raise RuntimeError(ERROR_CODE) from exc
+
     logging.debug("response: %s", resData)
 
     if 'succ' in resData:
         if 'synckey' in resData:
+            synckey_repair_attempts = 0
             lastTime = thisTime
             index += 1
             time.sleep(30)
             refresh_print(f"阅读进度: 第 {min(index, READ_NUM + 1) - 1}/{READ_NUM} 次，已完成 {(index - 1) * 0.5:.1f} 分钟")
         else:
-            logging.warning("无 synckey，尝试修复...")
-            fix_no_synckey()
+            synckey_repair_attempts += 1
+            if synckey_repair_attempts > SYNCKEY_REPAIR_LIMIT:
+                ERROR_CODE = f"连续 {SYNCKEY_REPAIR_LIMIT} 次未恢复 synckey，终止运行。"
+                logging.error(ERROR_CODE)
+                push(ERROR_CODE, PUSH_METHOD, is_success=False)
+                raise RuntimeError(ERROR_CODE)
+
+            logging.warning(
+                "无 synckey，尝试修复（%d/%d）...",
+                synckey_repair_attempts,
+                SYNCKEY_REPAIR_LIMIT,
+            )
+            try:
+                fix_no_synckey()
+            except requests.RequestException as exc:
+                ERROR_CODE = f"synckey 修复请求失败：{exc}"
+                logging.error(ERROR_CODE)
+                push(ERROR_CODE, PUSH_METHOD, is_success=False)
+                raise RuntimeError(ERROR_CODE) from exc
+            time.sleep(SYNCKEY_REPAIR_DELAY)
     else:
         logging.warning("cookie 已过期，尝试刷新...")
         refresh_cookie()
