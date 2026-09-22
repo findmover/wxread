@@ -60,20 +60,26 @@ def fix_no_synckey():
 
 refresh_print = setup_logging()
 
-def refresh_cookie():
+def refresh_cookie(strict=True):
     logging.info("刷新 cookie")
     new_skey = get_wr_skey()
     if new_skey:
         cookies['wr_skey'] = new_skey
         logging.info(f"密钥刷新成功，新密钥：{new_skey[:2]}***")
         logging.info("重新本次阅读。")
-    else:
-        ERROR_CODE = "无法获取新密钥或者 WXREAD_CURL_BASH 配置有误，终止运行。"
+        return True
+
+    ERROR_CODE = "无法获取新密钥或者 WXREAD_CURL_BASH 配置有误，终止运行。"
+    if strict:
         logging.error(ERROR_CODE)
         push(ERROR_CODE, PUSH_METHOD, is_success=False)
         raise Exception(ERROR_CODE)
 
-refresh_cookie()
+    logging.warning("启动时未获取到新密钥，保留现有 cookie 继续尝试阅读。")
+    return False
+
+# renewal 失败不等于当前阅读会话已失效；启动时刷新失败也继续尝试阅读。
+refresh_cookie(strict=False)
 index = 1
 lastTime = int(time.time()) - 30
 logging.info(f"一共需要阅读 {READ_NUM} 次。")
