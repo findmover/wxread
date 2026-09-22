@@ -59,14 +59,69 @@
 
 ### 方法二： 服务器运行（docker部署）
 
-- 在你的服务器上有Python运行环境即可，使用`cron`定义自动运行。
-- 或者通过docker运行，将抓到的bash命令在 [Convert](https://curlconverter.com/python/) 转化为Python字典格式，复制需要的headers与cookies即可（data不需要）。
+**步骤1：** 创建 docker-compose.yml 文件
 
-steps1：克隆这个项目：`git clone https://github.com/findmover/wxread.git`<br>
-steps2：配置config.py里的headers、cookies、READ_NUM、PUSH_METHOD以及对应推送方式token<br>
-steps3：进入目录使用镜像构建容器：
-`docker rm -f wxread && docker build -t wxread . && docker run -d --name wxread -v $(pwd)/logs:/app/logs --restart always wxread`<br>
-steps4：测试：`docker exec -it wxread python /app/main.py`
+```yaml
+services:
+  wxread:
+    image: ghcr.io/findmover/wxread:latest
+    container_name: wxread
+    restart: unless-stopped
+
+    environment:
+      TZ: "Asia/Shanghai"
+      
+      # 阅读次数（每次 30 秒），默认40为20分钟
+      READ_NUM: 40
+      
+      # 微信读书 curl bash 命令（必需）
+      # 使用 | 表示多行字符串，下一行开始粘贴完整的 curl 命令
+      WXREAD_CURL_BASH: |
+        curl 'https://weread.qq.com/web/book/read' \
+        -H 'accept: application/json, text/plain, */*' \
+        .....
+      
+      # 定时任务时间（Cron 表达式）
+      CRON_SCHEDULE: "0 1 * * *"
+      
+      # 可选配置：推送方式 (pushplus/wxpusher/telegram/serverchan)
+      PUSH_METHOD: ""
+      # PushPlus 推送配置
+      PUSHPLUS_TOKEN: ""
+      # Telegram 推送配置
+      TELEGRAM_BOT_TOKEN: ""
+      TELEGRAM_CHAT_ID: ""
+      # WxPusher 推送配置
+      WXPUSHER_SPT: ""
+      # ServerChan 推送配置
+      SERVERCHAN_SPT: ""
+```
+
+**Cron 定时任务配置：**
+- `0 1 * * *` - 每天凌晨1点（默认）
+- `0 */6 * * *` - 每6小时
+- `30 8 * * *` - 每天早上8:30
+
+**步骤2：** 启动容器
+
+```bash
+docker-compose up -d
+```
+
+**步骤3：** 查看日志和测试
+
+```bash
+# 查看日志
+docker-compose logs -f
+
+# 测试运行
+docker-compose exec wxread python /app/main.py
+```
+
+**Docker 说明：**
+- 镜像地址：`ghcr.io/findmover/wxread:latest`
+- 支持多架构：linux/amd64 和 linux/arm64
+- 推送代码到仓库会自动构建最新镜像
 
 ***
 ## Attention 📢
