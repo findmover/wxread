@@ -5,3 +5,8 @@ __pycache__/
 # Log files
 logs/
 *.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
