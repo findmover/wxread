@@ -20,6 +20,7 @@ COOKIE_DATA_VARIANTS = [{"rq": "%2Fweb%2Fbook%2Fread", "ql": False},{"rq": "%2Fw
 REQUEST_TIMEOUT = (10, 30)
 SYNCKEY_REPAIR_LIMIT = 3
 SYNCKEY_REPAIR_DELAY = 5
+AUTH_ERROR_CODES = {-2012, -2013}
 
 
 def encode_data(data):
@@ -85,7 +86,7 @@ def refresh_cookie(strict=True):
         logging.info("重新本次阅读。")
         return True
 
-    ERROR_CODE = "无法获取新密钥或者 WXREAD_CURL_BASH 配置有误，终止运行。"
+    ERROR_CODE = "无法获取新密钥，当前登录状态可能已失效，终止运行。"
     if strict:
         logging.error(ERROR_CODE)
         push(ERROR_CODE, PUSH_METHOD, is_success=False)
@@ -123,9 +124,16 @@ while index <= READ_NUM:
             data=json.dumps(data, separators=(',', ':')),
             timeout=REQUEST_TIMEOUT,
         )
-        resData = response.json()
     except requests.RequestException as exc:
         ERROR_CODE = f"阅读请求失败：{exc}"
+        logging.error(ERROR_CODE)
+        push(ERROR_CODE, PUSH_METHOD, is_success=False)
+        raise RuntimeError(ERROR_CODE) from exc
+
+    try:
+        resData = response.json()
+    except ValueError as exc:
+        ERROR_CODE = f"read 接口返回非 JSON 响应，HTTP {response.status_code}。"
         logging.error(ERROR_CODE)
         push(ERROR_CODE, PUSH_METHOD, is_success=False)
         raise RuntimeError(ERROR_CODE) from exc
@@ -161,7 +169,19 @@ while index <= READ_NUM:
                 raise RuntimeError(ERROR_CODE) from exc
             time.sleep(SYNCKEY_REPAIR_DELAY)
     else:
-        logging.warning("cookie 已过期，尝试刷新...")
+        err_code = resData.get('errCode')
+        err_msg = resData.get('errMsg')
+        logging.warning(
+            "read 接口返回异常：HTTP %s，errCode=%s，errMsg=%s",
+            response.status_code,
+            err_code,
+            err_msg,
+        )
+
+        if err_code in AUTH_ERROR_CODES:
+            logging.warning("检测到登录/鉴权异常，尝试刷新 cookie...")
+        else:
+            logging.warning("未识别为已知鉴权错误，保留现有刷新流程尝试恢复...")
         refresh_cookie()
 
 logging.info("阅读脚本已完成。")
