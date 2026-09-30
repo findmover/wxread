@@ -22,7 +22,7 @@ class PushNotification:
         self.pushplus_url = "https://www.pushplus.plus/send"
         self.telegram_url = "https://api.telegram.org/bot{}/sendMessage"
         self.server_chan_url = "https://sctapi.ftqq.com/{}.send"
-        self.wxpusher_simple_url = "https://wxpusher.zjiecode.com/api/send/message/{}/{}"
+        self.wxpusher_simple_url = "https://wxpusher.zjiecode.com/api/send/message/simple-push"
         self.headers = {"Content-Type": "application/json"}
         self.proxies = {
             "http": os.getenv("http_proxy"),
@@ -69,11 +69,12 @@ class PushNotification:
 
     def push_wxpusher(self, content, spt):
         attempts = 5
-        url = self.wxpusher_simple_url.format(spt, content)
+        # 内容放进 JSON body，URL 路径里放不下 "/"（错误信息里常有）
+        payload = {"content": content, "contentType": 1, "spt": spt}
 
         for attempt in range(attempts):
             try:
-                response = requests.get(url, timeout=10)
+                response = requests.post(self.wxpusher_simple_url, json=payload, timeout=10)
                 response.raise_for_status()
                 logger.info("WxPusher 响应: %s", response.text)
                 return True
