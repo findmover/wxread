@@ -17,6 +17,18 @@ from config import (
 logger = logging.getLogger(__name__)
 
 
+def _validate_response(response, field, expected):
+    """Require HTTP and provider success without logging untrusted response data."""
+    response.raise_for_status()
+    result = response.json()
+    if (
+        not isinstance(result, dict)
+        or type(result.get(field)) is not type(expected)
+        or result[field] != expected
+    ):
+        raise ValueError("Provider rejected the notification")
+
+
 class PushNotification:
     def __init__(self):
         self.pushplus_url = "https://www.pushplus.plus/send"
@@ -30,6 +42,9 @@ class PushNotification:
         }
 
     def push_pushplus(self, content, token, is_success):
+        if not token:
+            logger.warning("PushPlus 未配置凭据，跳过推送。")
+            return False
         attempts = 5
         title = f"微信阅读-{'成功' if is_success else '失败'}"
         for attempt in range(attempts):
@@ -37,11 +52,11 @@ class PushNotification:
                 response = requests.post(
                     self.pushplus_url,
                     data=json.dumps({"token": token, "title": title,"content": content,}).encode("utf-8"),headers=self.headers,timeout=10,)
-                response.raise_for_status()
-                logger.info("PushPlus 响应: %s", response.text)
+                _validate_response(response, "code", 200)
+                logger.info("PushPlus 推送成功。")
                 return True
-            except requests.exceptions.RequestException as exc:
-                logger.error("PushPlus 推送失败: %s", exc)
+            except (requests.exceptions.RequestException, ValueError) as exc:
+                logger.error("PushPlus 推送失败 (%s)。", type(exc).__name__)
                 if attempt < attempts - 1:
                     sleep_time = random.randint(180, 360)
                     logger.info("%d 秒后重试...", sleep_time)
@@ -49,36 +64,43 @@ class PushNotification:
         return False
 
     def push_telegram(self, content, bot_token, chat_id):
+        if not bot_token or not chat_id:
+            logger.warning("Telegram 未配置凭据，跳过推送。")
+            return False
         url = self.telegram_url.format(bot_token)
         payload = {"chat_id": chat_id, "text": content}
 
         try:
             response = requests.post(url, json=payload, proxies=self.proxies, timeout=30)
-            logger.info("Telegram 响应: %s", response.text)
-            response.raise_for_status()
+            _validate_response(response, "ok", True)
+            logger.info("Telegram 推送成功。")
             return True
         except Exception as exc:
-            logger.error("Telegram 代理发送失败: %s", exc)
+            logger.error("Telegram 代理发送失败 (%s)。", type(exc).__name__)
             try:
                 response = requests.post(url, json=payload, timeout=30)
-                response.raise_for_status()
+                _validate_response(response, "ok", True)
+                logger.info("Telegram 推送成功。")
                 return True
             except Exception as inner_exc:
-                logger.error("Telegram 发送失败: %s", inner_exc)
+                logger.error("Telegram 发送失败 (%s)。", type(inner_exc).__name__)
                 return False
 
     def push_wxpusher(self, content, spt):
+        if not spt:
+            logger.warning("WxPusher 未配置凭据，跳过推送。")
+            return False
         attempts = 5
         url = self.wxpusher_simple_url.format(spt, content)
 
         for attempt in range(attempts):
             try:
                 response = requests.get(url, timeout=10)
-                response.raise_for_status()
-                logger.info("WxPusher 响应: %s", response.text)
+                _validate_response(response, "code", 1000)
+                logger.info("WxPusher 推送成功。")
                 return True
-            except requests.exceptions.RequestException as exc:
-                logger.error("WxPusher 推送失败: %s", exc)
+            except (requests.exceptions.RequestException, ValueError) as exc:
+                logger.error("WxPusher 推送失败 (%s)。", type(exc).__name__)
                 if attempt < attempts - 1:
                     sleep_time = random.randint(180, 360)
                     logger.info("%d 秒后重试...", sleep_time)
@@ -86,6 +108,9 @@ class PushNotification:
         return False
 
     def push_serverChan(self, content, spt, is_success):
+        if not spt:
+            logger.warning("ServerChan 未配置凭据，跳过推送。")
+            return False
         attempts = 5
         url = self.server_chan_url.format(spt)
 
@@ -99,11 +124,11 @@ class PushNotification:
                     headers=self.headers,
                     timeout=10,
                 )
-                response.raise_for_status()
-                logger.info("ServerChan 响应: %s", response.text)
+                _validate_response(response, "code", 0)
+                logger.info("ServerChan 推送成功。")
                 return True
-            except requests.exceptions.RequestException as exc:
-                logger.error("ServerChan 推送失败: %s", exc)
+            except (requests.exceptions.RequestException, ValueError) as exc:
+                logger.error("ServerChan 推送失败 (%s)。", type(exc).__name__)
                 if attempt < attempts - 1:
                     sleep_time = random.randint(180, 360)
                     logger.info("%d 秒后重试...", sleep_time)
@@ -129,5 +154,5 @@ def push(content, method, is_success = True):
     if method == "serverchan":
         return notifier.push_serverChan(content, SERVERCHAN_SPT, is_success)
 
-    logger.warning("无效的通知渠道 '%s'，已跳过推送。支持：pushplus、telegram、wxpusher、serverchan", method)
+    logger.warning("无效的通知渠道，已跳过推送。支持：pushplus、telegram、wxpusher、serverchan")
     return False
