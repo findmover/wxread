@@ -1,0 +1,33 @@
+services:
+  wxread:
+    image: ghcr.io/findmover/wxread:latest
+    container_name: wxread
+    restart: unless-stopped
+
+    environment:
+      TZ: "Asia/Shanghai"
+
+      # 阅读次数（每次 30 秒），默认40为20分钟
+      READ_NUM: 40
+
+      # 微信读书 curl bash 命令（必需）
+      # 使用 | 表示多行字符串，下一行开始粘贴完整的 curl 命令
+      WXREAD_CURL_BASH: |
+        curl 'https://weread.qq.com/web/book/read' \
+        -H 'accept: application/json, text/plain, */*' \
+        .....
+
+      # 定时任务时间（Cron 表达式）
+      CRON_SCHEDULE: "0 1 * * *"
+
+      # 可选配置：推送方式 (pushplus/wxpusher/telegram/serverchan)
+      PUSH_METHOD: ""
+      # PushPlus 推送配置
+      PUSHPLUS_TOKEN: ""
+      # Telegram 推送配置
+      TELEGRAM_BOT_TOKEN: ""
+      TELEGRAM_CHAT_ID: ""
+      # WxPusher 推送配置
+      WXPUSHER_SPT: ""
+      # ServerChan 推送配置
+      SERVERCHAN_SPT: ""
