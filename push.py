@@ -7,6 +7,9 @@ import time
 import requests
 
 from config import (
+    BARK_DEVICE_KEY,
+    BARK_LEVEL,
+    BARK_SERVER_URL,
     PUSHPLUS_TOKEN,
     SERVERCHAN_SPT,
     TELEGRAM_BOT_TOKEN,
@@ -19,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 class PushNotification:
     def __init__(self):
+        self.bark_url = f"{BARK_SERVER_URL.rstrip('/')}/push"
         self.pushplus_url = "https://www.pushplus.plus/send"
         self.telegram_url = "https://api.telegram.org/bot{}/sendMessage"
         self.server_chan_url = "https://sctapi.ftqq.com/{}.send"
@@ -28,6 +32,48 @@ class PushNotification:
             "http": os.getenv("http_proxy"),
             "https": os.getenv("https_proxy"),
         }
+
+    def push_bark(self, content, device_key, is_success):
+        if not device_key:
+            logger.error("未配置 BARK_DEVICE_KEY，无法发送 Bark 通知。")
+            return False
+
+        payload = {
+            "device_key": device_key,
+            "title": f"微信读书-{'成功' if is_success else '失败'}",
+            "body": content,
+            "group": "wxread",
+            "level": BARK_LEVEL,
+        }
+
+        for attempt in range(3):
+            try:
+                response = requests.post(
+                    self.bark_url,
+                    json=payload,
+                    headers=self.headers,
+                    timeout=15,
+                )
+                response.raise_for_status()
+                result = response.json()
+                if result.get("code") != 200:
+                    logger.warning(
+                        "Bark 推送被服务器拒绝：code=%s",
+                        result.get("code"),
+                    )
+                    return False
+                logger.info("Bark 通知发送成功。")
+                return True
+            except (requests.RequestException, ValueError) as exc:
+                logger.warning(
+                    "Bark 推送失败（第 %d/3 次）：%s",
+                    attempt + 1,
+                    exc,
+                )
+                if attempt < 2:
+                    time.sleep(2 ** attempt)
+
+        return False
 
     def push_pushplus(self, content, token, is_success):
         attempts = 5
@@ -120,6 +166,8 @@ def push(content, method, is_success = True):
 
     method = str(method).lower()
 
+    if method == "bark":
+        return notifier.push_bark(content, BARK_DEVICE_KEY, is_success)
     if method == "pushplus":
         return notifier.push_pushplus(content, PUSHPLUS_TOKEN, is_success)
     if method == "telegram":
@@ -129,5 +177,5 @@ def push(content, method, is_success = True):
     if method == "serverchan":
         return notifier.push_serverChan(content, SERVERCHAN_SPT, is_success)
 
-    logger.warning("无效的通知渠道 '%s'，已跳过推送。支持：pushplus、telegram、wxpusher、serverchan", method)
+    logger.warning("无效的通知渠道 '%s'，已跳过推送。支持：bark、pushplus、telegram、wxpusher、serverchan", method)
     return False

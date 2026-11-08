@@ -44,6 +44,9 @@ jobs:
     - name: Run deployment script
       env:
         WXREAD_CURL_BASH: ${{ secrets.WXREAD_CURL_BASH }}
+        BARK_DEVICE_KEY: ${{ secrets.BARK_DEVICE_KEY }}
+        BARK_SERVER_URL: ${{ vars.BARK_SERVER_URL }}
+        BARK_LEVEL: ${{ vars.BARK_LEVEL }}
         PUSH_METHOD: ${{ secrets.PUSH_METHOD }}
         PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
         WXPUSHER_SPT: ${{ secrets.WXPUSHER_SPT }}
