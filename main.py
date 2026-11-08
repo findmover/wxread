@@ -1,5 +1,4 @@
 # main.py 主逻辑：包括字段拼接、模拟请求
-import re
 import json
 import time
 import random
@@ -8,11 +7,9 @@ import hashlib
 import requests
 import urllib.parse
 from push import push
+from log_utils import setup_logging
 from config import data, headers, cookies, READ_NUM, PUSH_METHOD, book, chapter
 
-# 配置日志格式
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)-8s - %(message)s')
 
 # 加密盐及其它默认值
 KEY = "3c5c8717f3daf09iop3423zafeqoi"
@@ -20,6 +17,11 @@ COOKIE_DATA = {"rq": "%2Fweb%2Fbook%2Fread"}
 READ_URL = "https://weread.qq.com/web/book/read"
 RENEW_URL = "https://weread.qq.com/web/login/renewal"
 FIX_SYNCKEY_URL = "https://weread.qq.com/web/book/chapterInfos"
+COOKIE_DATA_VARIANTS = [{"rq": "%2Fweb%2Fbook%2Fread", "ql": False},{"rq": "%2Fweb%2Fbook%2Fread", "ql": True},{"rq": "%2Fweb%2Fbook%2Fread"},]
+REQUEST_TIMEOUT = (10, 30)
+SYNCKEY_REPAIR_LIMIT = 3
+SYNCKEY_REPAIR_DELAY = 5
+AUTH_ERROR_CODES = {-2012, -2013}
 
 
 def encode_data(data):
@@ -43,34 +45,63 @@ def cal_hash(input_string):
 
 def get_wr_skey():
     """刷新cookie密钥"""
-    response = requests.post(RENEW_URL, headers=headers, cookies=cookies,
-                             data=json.dumps(COOKIE_DATA, separators=(',', ':')))
-    for cookie in response.headers.get('Set-Cookie', '').split(';'):
-        if "wr_skey" in cookie:
-            return cookie.split('=')[-1][:8]
+    for cookie_data in COOKIE_DATA_VARIANTS:
+        try:
+            response = requests.post(
+                RENEW_URL,
+                headers=headers,
+                cookies=cookies,
+                data=json.dumps(cookie_data, separators=(',', ':')),
+                timeout=REQUEST_TIMEOUT,
+            )
+            
+            if 'wr_skey' in response.cookies:
+                return response.cookies['wr_skey'][:8]
+            else:
+                continue
+        except requests.RequestException as exc:
+            logging.warning(f"refresh_cookie 请求失败，payload={cookie_data}，原因：{exc}")
+            continue
+        
+        
     return None
 
 def fix_no_synckey():
-    requests.post(FIX_SYNCKEY_URL, headers=headers, cookies=cookies,
-                             data=json.dumps({"bookIds":["3300060341"]}, separators=(',', ':')))
+    response = requests.post(
+        FIX_SYNCKEY_URL,
+        headers=headers,
+        cookies=cookies,
+        data=json.dumps({"bookIds":["3300060341"]}, separators=(',', ':')),
+        timeout=REQUEST_TIMEOUT,
+    )
+    response.raise_for_status()
 
-def refresh_cookie():
-    logging.info(f"🍪 刷新cookie")
+refresh_print = setup_logging()
+
+def refresh_cookie(strict=True):
+    logging.info("刷新 cookie")
     new_skey = get_wr_skey()
     if new_skey:
         cookies['wr_skey'] = new_skey
-        logging.info(f"✅ 密钥刷新成功，新密钥：{new_skey}")
-        logging.info(f"🔄 重新本次阅读。")
-    else:
-        ERROR_CODE = "❌ 无法获取新密钥或者WXREAD_CURL_BASH配置有误，终止运行。"
+        logging.info(f"密钥刷新成功，新密钥：{new_skey[:2]}***")
+        logging.info("重新本次阅读。")
+        return True
+
+    ERROR_CODE = "无法获取新密钥，当前登录状态可能已失效，终止运行。"
+    if strict:
         logging.error(ERROR_CODE)
-        push(ERROR_CODE, PUSH_METHOD)
+        push(ERROR_CODE, PUSH_METHOD, is_success=False)
         raise Exception(ERROR_CODE)
 
-refresh_cookie()
+    logging.warning("启动时未获取到新密钥，保留现有 cookie 继续尝试阅读。")
+    return False
+
+# renewal 失败不等于当前阅读会话已失效；启动时刷新失败也继续尝试阅读。
+refresh_cookie(strict=False)
 index = 1
 lastTime = int(time.time()) - 30
-logging.info(f"⏱️ 一共需要阅读 {READ_NUM} 次...")
+synckey_repair_attempts = 0
+logging.info(f"一共需要阅读 {READ_NUM} 次。")
 
 while index <= READ_NUM:
     data.pop('s')
@@ -84,27 +115,80 @@ while index <= READ_NUM:
     data['sg'] = hashlib.sha256(f"{data['ts']}{data['rn']}{KEY}".encode()).hexdigest()
     data['s'] = cal_hash(encode_data(data))
 
-    logging.info(f"⏱️ 尝试第 {index} 次阅读...")
-    logging.info(f"📕 data: {data}")
-    response = requests.post(READ_URL, headers=headers, cookies=cookies, data=json.dumps(data, separators=(',', ':')))
-    resData = response.json()
-    logging.info(f"📕 response: {resData}")
+    refresh_print(f"阅读进度: 第 {index}/{READ_NUM} 次，已完成 {(index - 1) * 0.5:.1f} 分钟")
+    logging.debug("data: %s", data)
+    try:
+        response = requests.post(
+            READ_URL,
+            headers=headers,
+            cookies=cookies,
+            data=json.dumps(data, separators=(',', ':')),
+            timeout=REQUEST_TIMEOUT,
+        )
+    except requests.RequestException as exc:
+        ERROR_CODE = f"阅读请求失败：{exc}"
+        logging.error(ERROR_CODE)
+        push(ERROR_CODE, PUSH_METHOD, is_success=False)
+        raise RuntimeError(ERROR_CODE) from exc
+
+    try:
+        resData = response.json()
+    except ValueError as exc:
+        ERROR_CODE = f"read 接口返回非 JSON 响应，HTTP {response.status_code}。"
+        logging.error(ERROR_CODE)
+        push(ERROR_CODE, PUSH_METHOD, is_success=False)
+        raise RuntimeError(ERROR_CODE) from exc
+
+    logging.debug("response: %s", resData)
 
     if 'succ' in resData:
         if 'synckey' in resData:
+            synckey_repair_attempts = 0
             lastTime = thisTime
             index += 1
             time.sleep(30)
-            logging.info(f"✅ 阅读成功，阅读进度：{(index - 1) * 0.5} 分钟")
+            refresh_print(f"阅读进度: 第 {min(index, READ_NUM + 1) - 1}/{READ_NUM} 次，已完成 {(index - 1) * 0.5:.1f} 分钟")
         else:
-            logging.warning("❌ 无synckey, 尝试修复...")
-            fix_no_synckey()
+            synckey_repair_attempts += 1
+            if synckey_repair_attempts > SYNCKEY_REPAIR_LIMIT:
+                ERROR_CODE = f"连续 {SYNCKEY_REPAIR_LIMIT} 次未恢复 synckey，终止运行。"
+                logging.error(ERROR_CODE)
+                push(ERROR_CODE, PUSH_METHOD, is_success=False)
+                raise RuntimeError(ERROR_CODE)
+
+            logging.warning(
+                "无 synckey，尝试修复（%d/%d）...",
+                synckey_repair_attempts,
+                SYNCKEY_REPAIR_LIMIT,
+            )
+            try:
+                fix_no_synckey()
+            except requests.RequestException as exc:
+                ERROR_CODE = f"synckey 修复请求失败：{exc}"
+                logging.error(ERROR_CODE)
+                push(ERROR_CODE, PUSH_METHOD, is_success=False)
+                raise RuntimeError(ERROR_CODE) from exc
+            time.sleep(SYNCKEY_REPAIR_DELAY)
     else:
-        logging.warning("❌ cookie 已过期，尝试刷新...")
+        err_code = resData.get('errCode')
+        err_msg = resData.get('errMsg')
+        logging.warning(
+            "read 接口返回异常：HTTP %s，errCode=%s，errMsg=%s",
+            response.status_code,
+            err_code,
+            err_msg,
+        )
+
+        if err_code in AUTH_ERROR_CODES:
+            logging.warning("检测到登录/鉴权异常，尝试刷新 cookie...")
+        else:
+            logging.warning("未识别为已知鉴权错误，保留现有刷新流程尝试恢复...")
         refresh_cookie()
 
-logging.info("🎉 阅读脚本已完成！")
+logging.info("阅读脚本已完成。")
 
 if PUSH_METHOD not in (None, ''):
-    logging.info("⏱️ 开始推送...")
-    push(f"🎉 微信读书自动阅读完成！\n⏱️ 阅读时长：{(index - 1) * 0.5}分钟。", PUSH_METHOD)
+    logging.info("开始推送...")
+    push(f"微信读书自动阅读完成。\n阅读时长：{(index - 1) * 0.5} 分钟。", PUSH_METHOD, is_success=True)
+else:
+    logging.info("未配置推送渠道，跳过推送。")
