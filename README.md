@@ -85,8 +85,12 @@ services:
       # 定时任务时间（Cron 表达式）
       CRON_SCHEDULE: "0 1 * * *"
       
-      # 可选配置：推送方式 (pushplus/wxpusher/telegram/serverchan)
+      # 可选配置：推送方式 (bark/pushplus/wxpusher/telegram/serverchan)
       PUSH_METHOD: ""
+      # Bark 推送配置
+      BARK_DEVICE_KEY: ""
+      BARK_SERVER_URL: "https://api.day.app"
+      BARK_LEVEL: "active"
       # PushPlus 推送配置
       PUSHPLUS_TOKEN: ""
       # Telegram 推送配置
@@ -158,3 +162,9 @@ docker-compose exec wxread python /app/main.py
 | `s` | `"fadcb9de"` | 校验和或哈希值，用于验证请求数据的完整性。 |
 
 
+
+### Bark 结果通知
+
+在仓库 Settings → Secrets and variables → Actions 中设置 Secret `PUSH_METHOD=bark` 和 `BARK_DEVICE_KEY`（Bark App 中的设备 Key）。可选 Variables `BARK_SERVER_URL` 默认 `https://api.day.app`，`BARK_LEVEL` 默认 `active`。本地或 Docker 部署使用同名环境变量，示例见 `.env.example` 和 `docker-compose.yml`。
+
+阅读完成及现有错误处理流程调用推送时，Bark 会收到对应的成功或失败标题与结果正文；通知按 `wxread` 分组。请求使用 JSON POST，设备 Key 不放在 URL 中。HTTP 错误、网络错误及无效 JSON 最多尝试三次；服务端返回非 200 业务码时报告失败。通知发送失败返回 `False`，不抛出异常。

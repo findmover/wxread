@@ -11,6 +11,10 @@ import re
 READ_NUM = int(os.getenv('READ_NUM') or 40)
 # 需要推送时可选，可选pushplus、wxpusher、telegram
 PUSH_METHOD = "" or os.getenv('PUSH_METHOD')
+# Bark 推送（可选）
+BARK_DEVICE_KEY = os.getenv("BARK_DEVICE_KEY") or ""
+BARK_SERVER_URL = os.getenv("BARK_SERVER_URL") or "https://api.day.app"
+BARK_LEVEL = os.getenv("BARK_LEVEL") or "active"
 # pushplus推送时需填
 PUSHPLUS_TOKEN = "" or os.getenv("PUSHPLUS_TOKEN")
 # telegram推送时需填
